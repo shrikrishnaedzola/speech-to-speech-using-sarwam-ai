@@ -1,0 +1,703 @@
+{
+  "schema_version": "1.0",
+  "call": {
+    "call_id": "sample-openai-01",
+    "provider": "openai",
+    "model": "gpt-realtime-2.1",
+    "voice": "marin",
+    "language_selected": "en-IN",
+    "audio_mode": "normal",
+    "mode": "simulate",
+    "started_at": "2026-10-27T10:00:00+00:00",
+    "ended_at": "2026-10-27T10:01:22.600000+00:00",
+    "duration_s": 82.6,
+    "form_id": "program_feedback_survey_test",
+    "form_name": "Program Feedback Survey (Test)"
+  },
+  "form_fields": [
+    {
+      "id": "caller_name",
+      "label": "Caller name",
+      "type": "text",
+      "required": true
+    },
+    {
+      "id": "age",
+      "label": "Age",
+      "type": "number",
+      "required": true
+    },
+    {
+      "id": "district",
+      "label": "District",
+      "type": "text",
+      "required": true
+    },
+    {
+      "id": "preferred_language",
+      "label": "Preferred language",
+      "type": "choice",
+      "required": false
+    },
+    {
+      "id": "attended_sessions",
+      "label": "Attended sessions",
+      "type": "yes_no",
+      "required": true
+    },
+    {
+      "id": "reason_not_attended",
+      "label": "Reason for not attending",
+      "type": "text",
+      "required": true,
+      "show_if": {
+        "field": "attended_sessions",
+        "op": "eq",
+        "value": "no"
+      }
+    },
+    {
+      "id": "sessions_attended_count",
+      "label": "Sessions attended",
+      "type": "number",
+      "required": true,
+      "show_if": {
+        "field": "attended_sessions",
+        "op": "eq",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "number_of_children",
+      "label": "Number of children",
+      "type": "number",
+      "required": true
+    },
+    {
+      "id": "children_ages",
+      "label": "Children's ages",
+      "type": "number_list",
+      "required": true,
+      "show_if": {
+        "field": "number_of_children",
+        "op": "gt",
+        "value": 0
+      }
+    },
+    {
+      "id": "satisfaction_rating",
+      "label": "Satisfaction rating (1-5)",
+      "type": "number",
+      "required": true
+    },
+    {
+      "id": "improvement_suggestion",
+      "label": "Improvement suggestion",
+      "type": "text",
+      "required": false
+    },
+    {
+      "id": "consent_to_followup",
+      "label": "Consent to follow-up",
+      "type": "yes_no",
+      "required": true
+    }
+  ],
+  "transcript": [
+    {
+      "role": "agent",
+      "text": "Hello! I am calling on behalf of an NGO program. This call takes about three minutes. Is this a good time to talk?",
+      "offset_s": 1.0,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "Yes, go ahead.",
+      "offset_s": 9.82,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "Thank you. May I know your name?",
+      "offset_s": 10.58,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "My name is Test Caller.",
+      "offset_s": 15.11,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "Thanks. What is your age?",
+      "offset_s": 15.91,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "Forty five.",
+      "offset_s": 19.18,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "Got it, fifty four. Which district do you live in?",
+      "offset_s": 20.02,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "No, I said forty five. And the district is Sample Nagar.",
+      "offset_s": 27.94,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "Sorry about that, forty five. Which language do you prefer for the sessions?",
+      "offset_s": 29.26,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "English.",
+      "offset_s": 35.38,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "Did you attend any of the program sessions?",
+      "offset_s": 36.16,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "No, I could not.",
+      "offset_s": 40.86,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "Could you tell me why you could not attend?",
+      "offset_s": 41.68,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "I was travelling for work.",
+      "offset_s": 47.08,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "How many children do you have?",
+      "offset_s": 47.87,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "None.",
+      "offset_s": 51.02,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "On a scale of one to five, how satisfied are you with the program?",
+      "offset_s": 51.88,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "Five.",
+      "offset_s": 57.19,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "Do you have any suggestion to improve the program?",
+      "offset_s": 57.99,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "No suggestions.",
+      "offset_s": 63.04,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "May we contact you again for a short follow-up later?",
+      "offset_s": 63.87,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "Yes.",
+      "offset_s": 68.33,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "To confirm: Test Caller, forty five, Sample Nagar, did not attend, no children, rating five. Is that right?",
+      "offset_s": 69.1,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "Yes, that's right.",
+      "offset_s": 77.78,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "Thank you so much for your time. Have a great day!",
+      "offset_s": 78.59,
+      "interrupted": false
+    }
+  ],
+  "answers": [
+    {
+      "field_id": "caller_name",
+      "attempts": 1,
+      "value": "Test Caller",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "age",
+      "attempts": 2,
+      "value": 45,
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "district",
+      "attempts": 1,
+      "value": "Sample Nagar",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "preferred_language",
+      "attempts": 1,
+      "value": "English",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "attended_sessions",
+      "attempts": 1,
+      "value": "no",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "reason_not_attended",
+      "attempts": 1,
+      "value": "Travelling for work",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "number_of_children",
+      "attempts": 1,
+      "value": 0,
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "satisfaction_rating",
+      "attempts": 1,
+      "value": 5,
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "improvement_suggestion",
+      "status": "skipped",
+      "attempts": 0
+    },
+    {
+      "field_id": "consent_to_followup",
+      "attempts": 1,
+      "value": "yes",
+      "status": "filled",
+      "confidence": "high"
+    }
+  ],
+  "reviews": [
+    {
+      "field_id": "caller_name",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "age",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "district",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "preferred_language",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "attended_sessions",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "reason_not_attended",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "number_of_children",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "satisfaction_rating",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "consent_to_followup",
+      "verdict": "correct"
+    }
+  ],
+  "turns": [
+    {
+      "turn_index": 0,
+      "total_ms": 520,
+      "agent_text": "Hello! I am calling on behalf of an NGO program. This call takes about three minutes. Is this a good time to talk?"
+    },
+    {
+      "turn_index": 1,
+      "total_ms": 760,
+      "user_text": "Yes, go ahead.",
+      "agent_text": "Thank you. May I know your name?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 2,
+      "total_ms": 800,
+      "user_text": "My name is Test Caller.",
+      "agent_text": "Thanks. What is your age?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 3,
+      "total_ms": 840,
+      "user_text": "Forty five.",
+      "agent_text": "Got it, fifty four. Which district do you live in?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 4,
+      "total_ms": 1320,
+      "user_text": "No, I said forty five. And the district is Sample Nagar.",
+      "agent_text": "Sorry about that, forty five. Which language do you prefer for the sessions?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 5,
+      "total_ms": 780,
+      "user_text": "English.",
+      "agent_text": "Did you attend any of the program sessions?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 6,
+      "total_ms": 820,
+      "user_text": "No, I could not.",
+      "agent_text": "Could you tell me why you could not attend?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 7,
+      "total_ms": 790,
+      "user_text": "I was travelling for work.",
+      "agent_text": "How many children do you have?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 8,
+      "total_ms": 860,
+      "user_text": "None.",
+      "agent_text": "On a scale of one to five, how satisfied are you with the program?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 9,
+      "total_ms": 800,
+      "user_text": "Five.",
+      "agent_text": "Do you have any suggestion to improve the program?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 10,
+      "total_ms": 830,
+      "user_text": "No suggestions.",
+      "agent_text": "May we contact you again for a short follow-up later?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 11,
+      "total_ms": 770,
+      "user_text": "Yes.",
+      "agent_text": "To confirm: Test Caller, forty five, Sample Nagar, did not attend, no children, rating five. Is that right?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 12,
+      "total_ms": 810,
+      "user_text": "Yes, that's right.",
+      "agent_text": "Thank you so much for your time. Have a great day!",
+      "interrupted": false
+    }
+  ],
+  "tool_calls": [
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "caller_name",
+        "value": "Test Caller",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "caller_name": "Test Caller"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 15.41
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "age",
+        "value": "54",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "age": 54
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 19.53
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "age",
+        "value": "45",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "age": 45
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 28.34
+    },
+    {
+      "name": "save_answer",
+      "arguments": "{\"field_id\": \"district\", \"value\": \"Sample Nagar\" \"confidence\": \"high\"}",
+      "success": false,
+      "parse_error": true,
+      "result": {
+        "ok": false,
+        "error": "Invalid arguments: not valid JSON."
+      },
+      "duration_ms": 2,
+      "offset_s": 28.39
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "district",
+        "value": "Sample Nagar",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "district": "Sample Nagar"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 28.44
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "preferred_language",
+        "value": "English",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "preferred_language": "English"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 35.93
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "attended_sessions",
+        "value": "no",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "attended_sessions": "no"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 41.46
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "reason_not_attended",
+        "value": "Travelling for work",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "reason_not_attended": "Travelling for work"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 47.73
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "number_of_children",
+        "value": "0",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "number_of_children": 0
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 51.72
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "satisfaction_rating",
+        "value": "5",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "satisfaction_rating": 5
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 57.94
+    },
+    {
+      "name": "skip_field",
+      "arguments": {
+        "field_id": "improvement_suggestion",
+        "reason": "Caller had none"
+      },
+      "success": true,
+      "result": {
+        "ok": true
+      },
+      "duration_ms": 6,
+      "offset_s": 63.84
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "consent_to_followup",
+        "value": "yes",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "consent_to_followup": "yes"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 69.18
+    },
+    {
+      "name": "complete_form",
+      "arguments": {},
+      "success": true,
+      "result": {
+        "ok": true
+      },
+      "duration_ms": 7,
+      "offset_s": 78.68
+    }
+  ],
+  "usage": {
+    "call_minutes": 1.377,
+    "audio_input_tokens": 1100,
+    "llm_cached_input_tokens": 400,
+    "audio_output_tokens": 1750,
+    "llm_input_tokens": 2600,
+    "llm_output_tokens": 420
+  },
+  "interruptions": 0,
+  "form_completed": true,
+  "recording_path": null,
+  "expected_script": {
+    "scenario_id": "english-basic-01",
+    "caller_turns": [
+      "Yes, go ahead.",
+      "My name is Test Caller.",
+      "Forty five.",
+      "No, I said forty five. And the district is Sample Nagar.",
+      "English.",
+      "No, I could not.",
+      "I was travelling for work.",
+      "None.",
+      "Five.",
+      "No suggestions.",
+      "Yes.",
+      "Yes, that's right."
+    ],
+    "expected_answers": {
+      "caller_name": "Test Caller",
+      "age": 45,
+      "district": "Sample Nagar",
+      "attended_sessions": "no",
+      "reason_not_attended": "Travelling for work",
+      "number_of_children": 0,
+      "satisfaction_rating": 5,
+      "consent_to_followup": "yes"
+    }
+  },
+  "errors": []
+}

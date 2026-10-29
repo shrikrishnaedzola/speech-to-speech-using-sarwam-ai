@@ -1,0 +1,27 @@
+/* Chart colours for the report (validated palette: blue / orange / aqua, plus neutral
+   greys). Dark mode has its own steps. Kept here so the report folder can be copied
+   into any tester app. */
+:root {
+  --rep-stt: #2a78d6;
+  --rep-llm: #eb6834;
+  --rep-tts: #1baf7a;
+  --rep-wait: #a8a7a1;
+  --rep-other: #d6d5cf;
+  --rep-grid: #e5e4df;
+  --rep-axis: #6b6a64;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rep-stt: #3987e5;
+    --rep-llm: #d95926;
+    --rep-tts: #199e70;
+    --rep-wait: #6b6a64;
+    --rep-other: #45443f;
+    --rep-grid: #33322e;
+    --rep-axis: #a8a7a1;
+  }
+}
+
+@media print {
+  .no-print { display: none !important; }
+}

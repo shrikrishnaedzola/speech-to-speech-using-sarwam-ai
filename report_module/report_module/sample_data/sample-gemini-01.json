@@ -1,0 +1,707 @@
+{
+  "schema_version": "1.0",
+  "call": {
+    "call_id": "sample-gemini-01",
+    "provider": "gemini",
+    "model": "gemini-live-native-audio",
+    "voice": "Kore",
+    "language_selected": "ta-IN",
+    "audio_mode": "phone_8khz",
+    "mode": "simulate",
+    "started_at": "2026-10-27T10:00:00+00:00",
+    "ended_at": "2026-10-27T10:01:08.300000+00:00",
+    "duration_s": 68.3,
+    "form_id": "program_feedback_survey_test",
+    "form_name": "Program Feedback Survey (Test)"
+  },
+  "form_fields": [
+    {
+      "id": "caller_name",
+      "label": "Caller name",
+      "type": "text",
+      "required": true
+    },
+    {
+      "id": "age",
+      "label": "Age",
+      "type": "number",
+      "required": true
+    },
+    {
+      "id": "district",
+      "label": "District",
+      "type": "text",
+      "required": true
+    },
+    {
+      "id": "preferred_language",
+      "label": "Preferred language",
+      "type": "choice",
+      "required": false
+    },
+    {
+      "id": "attended_sessions",
+      "label": "Attended sessions",
+      "type": "yes_no",
+      "required": true
+    },
+    {
+      "id": "reason_not_attended",
+      "label": "Reason for not attending",
+      "type": "text",
+      "required": true,
+      "show_if": {
+        "field": "attended_sessions",
+        "op": "eq",
+        "value": "no"
+      }
+    },
+    {
+      "id": "sessions_attended_count",
+      "label": "Sessions attended",
+      "type": "number",
+      "required": true,
+      "show_if": {
+        "field": "attended_sessions",
+        "op": "eq",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "number_of_children",
+      "label": "Number of children",
+      "type": "number",
+      "required": true
+    },
+    {
+      "id": "children_ages",
+      "label": "Children's ages",
+      "type": "number_list",
+      "required": true,
+      "show_if": {
+        "field": "number_of_children",
+        "op": "gt",
+        "value": 0
+      }
+    },
+    {
+      "id": "satisfaction_rating",
+      "label": "Satisfaction rating (1-5)",
+      "type": "number",
+      "required": true
+    },
+    {
+      "id": "improvement_suggestion",
+      "label": "Improvement suggestion",
+      "type": "text",
+      "required": false
+    },
+    {
+      "id": "consent_to_followup",
+      "label": "Consent to follow-up",
+      "type": "yes_no",
+      "required": true
+    }
+  ],
+  "transcript": [
+    {
+      "role": "agent",
+      "text": "வணக்கம்! ஒரு NGO திட்டத்தின் சார்பாக அழைக்கிறேன். இது சுமார் மூன்று நிமிடங்கள் ஆகும். இப்போது பேசலாமா?",
+      "offset_s": 1.0,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "சரி, சொல்லுங்க.",
+      "offset_s": 9.17,
+      "language": "ta-IN"
+    },
+    {
+      "role": "agent",
+      "text": "நன்றி. உங்கள் பெயர் என்ன?",
+      "offset_s": 10.27,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "என் பெயர் டெஸ்ட் யூசர்.",
+      "offset_s": 14.38,
+      "language": "ta-IN"
+    },
+    {
+      "role": "agent",
+      "text": "உங்கள் வயது என்ன?",
+      "offset_s": 15.63,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "முப்பத்தி ரெண்டு.",
+      "offset_s": 18.84,
+      "language": "ta-IN"
+    },
+    {
+      "role": "agent",
+      "text": "Thank you. Which district do you live in?",
+      "offset_s": 20.22,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "Sample district.",
+      "offset_s": 24.8,
+      "language": "en-IN"
+    },
+    {
+      "role": "agent",
+      "text": "எந்த மொழியை விரும்புகிறீர்கள்?",
+      "offset_s": 26.01,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "தமிழ்.",
+      "offset_s": 29.23,
+      "language": "ta-IN"
+    },
+    {
+      "role": "agent",
+      "text": "நீங்கள் ஏதாவது அமர்வுகளில் கலந்து கொண்டீர்களா?",
+      "offset_s": 30.38,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "ஆமா.",
+      "offset_s": 34.42,
+      "language": "ta-IN"
+    },
+    {
+      "role": "agent",
+      "text": "Thank you. How many sessions did you attend?",
+      "offset_s": 35.71,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "அஞ்சு.",
+      "offset_s": 39.77,
+      "language": "ta-IN"
+    },
+    {
+      "role": "agent",
+      "text": "உங்களுக்கு எத்தனை குழந்தைகள்?",
+      "offset_s": 41.11,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "ரெண்டு.",
+      "offset_s": 44.34,
+      "language": "ta-IN"
+    },
+    {
+      "role": "agent",
+      "text": "அவர்களின் வயது என்ன?",
+      "offset_s": 45.52,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "மூணு, ஏழு.",
+      "offset_s": 48.42,
+      "language": "ta-IN"
+    },
+    {
+      "role": "agent",
+      "text": "ஒன்று முதல் ஐந்து வரை, திட்டத்தில் எவ்வளவு திருப்தி?",
+      "offset_s": 49.84,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "நாலு.",
+      "offset_s": 54.31,
+      "language": "ta-IN"
+    },
+    {
+      "role": "agent",
+      "text": "ஏதாவது பரிந்துரை உள்ளதா?",
+      "offset_s": 55.57,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "இல்லை.",
+      "offset_s": 58.43,
+      "language": "ta-IN"
+    },
+    {
+      "role": "agent",
+      "text": "பின்னர் உங்களைத் தொடர்பு கொள்ளலாமா?",
+      "offset_s": 59.62,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "ஆமா.",
+      "offset_s": 63.0,
+      "language": "ta-IN"
+    },
+    {
+      "role": "agent",
+      "text": "மிக்க நன்றி. நல்ல நாள்!",
+      "offset_s": 64.3,
+      "interrupted": false
+    }
+  ],
+  "answers": [
+    {
+      "field_id": "caller_name",
+      "attempts": 1,
+      "value": "Test User",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "age",
+      "attempts": 1,
+      "value": 22,
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "district",
+      "attempts": 1,
+      "value": "Sample district",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "preferred_language",
+      "attempts": 1,
+      "value": "Tamil",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "attended_sessions",
+      "attempts": 1,
+      "value": "yes",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "sessions_attended_count",
+      "attempts": 1,
+      "value": 5,
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "number_of_children",
+      "attempts": 1,
+      "value": 2,
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "children_ages",
+      "attempts": 1,
+      "value": [
+        3,
+        7
+      ],
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "satisfaction_rating",
+      "attempts": 1,
+      "value": 4,
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "improvement_suggestion",
+      "status": "skipped",
+      "attempts": 0
+    },
+    {
+      "field_id": "consent_to_followup",
+      "attempts": 1,
+      "value": "yes",
+      "status": "filled",
+      "confidence": "high"
+    }
+  ],
+  "reviews": [
+    {
+      "field_id": "age",
+      "verdict": "wrong",
+      "expected_value": "32"
+    },
+    {
+      "field_id": "children_ages",
+      "verdict": "wrong",
+      "expected_value": "3, 8"
+    },
+    {
+      "field_id": "caller_name",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "district",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "preferred_language",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "attended_sessions",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "sessions_attended_count",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "number_of_children",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "satisfaction_rating",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "consent_to_followup",
+      "verdict": "correct"
+    }
+  ],
+  "turns": [
+    {
+      "turn_index": 0,
+      "total_ms": 700,
+      "agent_text": "வணக்கம்! ஒரு NGO திட்டத்தின் சார்பாக அழைக்கிறேன். இது சுமார் மூன்று நிமிடங்கள் ஆகும். இப்போது பேசலாமா?"
+    },
+    {
+      "turn_index": 1,
+      "total_ms": 1100,
+      "user_text": "சரி, சொல்லுங்க.",
+      "agent_text": "நன்றி. உங்கள் பெயர் என்ன?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 2,
+      "total_ms": 1250,
+      "user_text": "என் பெயர் டெஸ்ட் யூசர்.",
+      "agent_text": "உங்கள் வயது என்ன?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 3,
+      "total_ms": 1380,
+      "user_text": "முப்பத்தி ரெண்டு.",
+      "agent_text": "Thank you. Which district do you live in?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 4,
+      "total_ms": 1210,
+      "user_text": "Sample district.",
+      "agent_text": "எந்த மொழியை விரும்புகிறீர்கள்?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 5,
+      "total_ms": 1150,
+      "user_text": "தமிழ்.",
+      "agent_text": "நீங்கள் ஏதாவது அமர்வுகளில் கலந்து கொண்டீர்களா?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 6,
+      "total_ms": 1290,
+      "user_text": "ஆமா.",
+      "agent_text": "Thank you. How many sessions did you attend?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 7,
+      "total_ms": 1340,
+      "user_text": "அஞ்சு.",
+      "agent_text": "உங்களுக்கு எத்தனை குழந்தைகள்?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 8,
+      "total_ms": 1180,
+      "user_text": "ரெண்டு.",
+      "agent_text": "அவர்களின் வயது என்ன?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 9,
+      "total_ms": 1420,
+      "user_text": "மூணு, ஏழு.",
+      "agent_text": "ஒன்று முதல் ஐந்து வரை, திட்டத்தில் எவ்வளவு திருப்தி?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 10,
+      "total_ms": 1260,
+      "user_text": "நாலு.",
+      "agent_text": "ஏதாவது பரிந்துரை உள்ளதா?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 11,
+      "total_ms": 1190,
+      "user_text": "இல்லை.",
+      "agent_text": "பின்னர் உங்களைத் தொடர்பு கொள்ளலாமா?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 12,
+      "total_ms": 1300,
+      "user_text": "ஆமா.",
+      "agent_text": "மிக்க நன்றி. நல்ல நாள்!",
+      "interrupted": false
+    }
+  ],
+  "tool_calls": [
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "caller_name",
+        "value": "Test User",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "caller_name": "Test User"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 14.68
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "age",
+        "value": "22",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "age": 22
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 19.19
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "district",
+        "value": "Sample district",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "district": "Sample district"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 25.2
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "preferred_language",
+        "value": "Tamil",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "preferred_language": "Tamil"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 29.68
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "attended_sessions",
+        "value": "yes",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "attended_sessions": "yes"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 34.92
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "sessions_attended_count",
+        "value": "5",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "sessions_attended_count": 5
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 40.32
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "number_of_children",
+        "value": "2",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "number_of_children": 2
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 44.94
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "children_ages",
+        "value": "3, 7",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "children_ages": [
+            3,
+            7
+          ]
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 49.07
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "satisfaction_rating",
+        "value": "4",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "satisfaction_rating": 4
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 55.01
+    },
+    {
+      "name": "skip_field",
+      "arguments": {
+        "field_id": "improvement_suggestion",
+        "reason": "Caller had none"
+      },
+      "success": true,
+      "result": {
+        "ok": true
+      },
+      "duration_ms": 6,
+      "offset_s": 59.18
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "consent_to_followup",
+        "value": "yes",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "consent_to_followup": "yes"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 63.8
+    },
+    {
+      "name": "complete_form",
+      "arguments": {},
+      "success": true,
+      "result": {
+        "ok": true
+      },
+      "duration_ms": 7,
+      "offset_s": 63.85
+    }
+  ],
+  "usage": {
+    "call_minutes": 1.138,
+    "audio_input_tokens": 1500,
+    "audio_output_tokens": 1650,
+    "llm_input_tokens": 2400,
+    "llm_output_tokens": 380
+  },
+  "interruptions": 0,
+  "form_completed": true,
+  "recording_path": null,
+  "expected_script": {
+    "scenario_id": "tamil-basic-01",
+    "caller_turns": [
+      "சரி, சொல்லுங்க.",
+      "என் பெயர் டெஸ்ட் யூசர்.",
+      "முப்பத்தி ரெண்டு.",
+      "Sample district.",
+      "தமிழ்.",
+      "ஆமா.",
+      "அஞ்சு.",
+      "ரெண்டு.",
+      "மூணு, எட்டு.",
+      "நாலு.",
+      "இல்லை.",
+      "ஆமா."
+    ],
+    "expected_answers": {
+      "caller_name": "Test User",
+      "age": 32,
+      "children_ages": [
+        3,
+        8
+      ]
+    }
+  },
+  "errors": []
+}

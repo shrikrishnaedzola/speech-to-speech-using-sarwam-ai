@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "report-module"
+version = "1.0.0"
+description = "Shared post-call report for the Zolabs voice form testers (OpenAI, Sarvam, Gemini, ElevenLabs)."
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.6",
+    "regex>=2024.0",
+    "fastapi>=0.110",
+    "sqlalchemy>=2.0",
+    "jinja2>=3.1",
+    "fpdf2>=2.8",
+    "uharfbuzz>=0.40",   # correct shaping of Indian scripts in the PDF
+    "matplotlib>=3.8",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+mos = ["onnxruntime>=1.17"]           # optional DNSMOS speech-quality score
+summary = ["anthropic>=0.50"]         # optional AI-written summary
+test = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+include = ["report_module*"]
+
+[tool.setuptools.package-data]
+report_module = ["templates/*", "templates/fonts/*", "sample_data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

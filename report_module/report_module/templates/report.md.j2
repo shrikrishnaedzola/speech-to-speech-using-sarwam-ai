@@ -1,0 +1,156 @@
+> **{{ r.test_mode_notice }}** · {{ r.review_notice }}
+
+# Post-call report: {{ r.call.provider }} · {{ r.call.model }}
+
+Call `{{ r.call.call_id }}` · {{ r.call.started_at.strftime("%Y-%m-%d %H:%M") }} UTC · generated {{ r.generated_at.strftime("%Y-%m-%d %H:%M") }} UTC
+{% for w in r.pii.warnings %}
+> ⚠ {{ w }}
+{% endfor %}
+
+## 1. Call summary
+
+**Overall score: {{ r.summary.overall_score | round | int }} / 100 - {{ r.summary.verdict }}**
+
+| Provider | Model | Voice | Language | Audio | Duration | Mode |
+|---|---|---|---|---|---|---|
+| {{ r.call.provider }} | {{ r.call.model }} | {{ r.call.voice or "-" }} | {{ r.call.language_selected }} | {{ "Phone 8 kHz" if r.call.audio_mode == "phone_8khz" else "Normal" }} | {{ r.call.duration_s | round | int }} s | {{ r.call.mode }} |
+
+| Section | Score | Weight used |
+|---|---|---|
+{% for key, score in r.summary.section_scores.items() -%}
+| {{ labels[key] }} | {{ "no data" if score is none else (score | round | int) }} | {{ (r.summary.weights_used.get(key) ~ "%") if r.summary.weights_used.get(key) is not none else "-" }} |
+{% endfor %}
+**Key strengths**
+{% for s in r.summary.strengths %}
+- {{ s }}
+{%- else %}
+- None found.
+{%- endfor %}
+
+**Key problems**
+{% for s in r.summary.problems %}
+- {{ s }}
+{%- else %}
+- None found.
+{%- endfor %}
+
+## 2. Transcript
+
+Markers: 🔴 mishearing · 🟠 re-asked · 🔵 tool call · 🟣 interrupted
+
+{% for t in r.transcript -%}
+{% if t.role == "tool" -%}
+- `{{ t.time }}` 🔵 {{ "✓" if t.tool.success else "✗" }} `{{ t.text }}`{% if t.tool.error %} - {{ t.tool.error }}{% endif %}
+{% else -%}
+- `{{ t.time }}` **{{ "Agent" if t.role == "agent" else "Caller" }}**{% if t.language %} ({{ t.language }}){% endif %}: {{ t.text }}{% for h in t.highlights %} {{ marks[h] }}{% endfor %}
+{% endif -%}
+{% endfor %}
+
+## 3. Mishearings
+
+{{ r.mishearings.total }} found, {{ r.mishearings.fixed }} fixed during the call.
+{%- if r.mishearings.script_available %} WER {{ pct(r.mishearings.wer, 1) }}, CER {{ pct(r.mishearings.cer, 1) }} ({{ r.mishearings.aligned_turns }} turns compared with the expected script).{% else %} No expected script, so no WER/CER.{% endif %}
+
+{% if r.mishearings.items -%}
+| Time | Type | Caller said | AI heard / saved | Field | Fixed? |
+|---|---|---|---|---|---|
+{% for m in r.mishearings.items -%}
+| {{ m.time or "-" }} | {{ kinds[m.kind] }} | {{ m.said | cell }} | {{ m.heard | cell }}{% if m.detail %} ({{ m.detail | cell }}){% endif %} | {{ m.field_id or "-" }} | {{ "unknown" if m.fixed is none else ("yes" if m.fixed else "no") }} |
+{% endfor %}
+{%- endif %}
+
+## 4. Voice quality
+
+- Tester rating average: {{ ("%.1f / 5" | format(r.voice_quality.rating_average)) if r.voice_quality.rating_average is not none else "not rated" }}
+{%- for key, label in rating_labels %}
+{%- if r.voice_quality.ratings[key] is not none %}
+  - {{ label }}: {{ r.voice_quality.ratings[key] }} / 5
+{%- endif %}
+{%- endfor %}
+- Automatic MOS: {% if r.voice_quality.mos %}overall {{ r.voice_quality.mos.ovrl }}, signal {{ r.voice_quality.mos.sig }}, noise {{ r.voice_quality.mos.bak }} ({{ r.voice_quality.mos.model }}){% else %}{{ r.voice_quality.mos_status }}{% endif %}
+{%- if r.voice_quality.ratings.notes %}
+- Tester notes: {{ r.voice_quality.ratings.notes }}
+{%- endif %}
+
+Audio issues:
+{% for i in r.voice_quality.issues %}
+- `{{ i.time or "-" }}` {{ issue_kinds[i.kind] }}: {{ i.detail }}
+{%- else %}
+- None found.
+{%- endfor %}
+
+## 5. Latency
+
+Average {{ ms(r.latency.average_ms) }} · median {{ ms(r.latency.median_ms) }} · p90 {{ ms(r.latency.p90_ms) }} · max {{ ms(r.latency.max_ms) }} · rating **{{ r.latency.rating or "-" }}** (Good < 1 s, OK 1-1.5 s, Poor > 1.5 s)
+
+| Turn | Total | Rating{% if r.latency.has_step_split %} | STT | Wait | LLM | TTS{% endif %} |
+|---|---|---{% if r.latency.has_step_split %}|---|---|---|---{% endif %}|
+{% for t in r.latency.per_turn -%}
+| {{ "Greeting" if t.turn_index == 0 else t.turn_index }} | {{ ms(t.total_ms) }} | {{ t.rating or "-" }}{% if r.latency.has_step_split %} | {{ ms(t.stt_ms) }} | {{ ms(t.turn_wait_ms) }} | {{ ms(t.llm_ttft_ms) }} | {{ ms(t.tts_ttfb_ms) }}{% endif %} |
+{% endfor %}
+Slowest turns:
+{% for s in r.latency.slowest %}
+- Turn {{ s.turn_index }}: {{ ms(s.total_ms) }} - {{ s.reason }}
+{%- endfor %}
+
+## 6. Language support
+
+- Selected: {{ r.language.selected }}; detected in caller turns: {% for d in r.language.detected %}{{ d.language }} ({{ d.caller_turns }}){% if not loop.last %}, {% endif %}{% endfor %}
+- Agent replied in the correct language: {{ ("%.0f%%" | format(r.language.agent_correct_language_pct)) if r.language.agent_correct_language_pct is not none else "-" }} of {{ r.language.agent_turns_checked }} turns
+- Code-mixing (tester rating): {{ (r.language.code_mixing_rating ~ " / 5") if r.language.code_mixing_rating else "not rated" }}
+- Mishearings by language: {% for k, v in r.language.mishearings_by_language.items() %}{{ k }}: {{ v }}{% if not loop.last %}, {% endif %}{% else %}none{% endfor %}
+{% for w in r.language.wrong_language_turns %}
+- Wrong language at `{{ w.time }}` (expected {{ w.expected }}, got {{ w.got }}): {{ w.text }}
+{%- endfor %}
+
+_{{ r.language.method_note }}_
+
+## 7. Accuracy
+
+Field accuracy **{{ pct(r.accuracy.field_accuracy) }}** ({{ r.accuracy.correct }} of {{ r.accuracy.reviewed }} checked) · completion **{{ pct(r.accuracy.completion) }}** ({{ r.accuracy.required_filled }} of {{ r.accuracy.required_total }} required) · follow-ups {{ r.accuracy.followups_correct }}/{{ r.accuracy.followups_total }} correct · invalid answers fixed {{ r.accuracy.invalid_answers_fixed }}/{{ r.accuracy.invalid_answers }} · tool calls {{ r.accuracy.tool_calls_total }} (success {{ pct(r.accuracy.tool_success_rate) }}, {{ r.accuracy.invalid_tool_calls }} invalid JSON, {{ r.accuracy.validation_errors }} validation errors)
+{% for f in r.accuracy.followup_issues %}
+- ⚠ {{ f }}
+{%- endfor %}
+
+| Field | Expected | Saved | Correct? | Notes |
+|---|---|---|---|---|
+{% for row in r.accuracy.table -%}
+| {{ row.label }} | {{ (row.expected or "-") | cell }} | {{ (row.saved or "-") | cell }} | {{ "not checked" if row.correct is none else ("yes" if row.correct else "no") }} | {{ row.notes | cell }} |
+{% endfor %}
+
+## 8. Cost
+
+This call: **₹{{ "%.2f" | format(r.cost.total_inr) }}** (${{ "%.4f" | format(r.cost.total_usd) }}) · per minute ₹{{ "%.2f" | format(r.cost.per_minute_inr or 0) }} · per completed form {{ ("₹%.2f" | format(r.cost.per_completed_form_inr)) if r.cost.per_completed_form_inr is not none else "- (form not completed)" }} · 1,000 similar calls ₹{{ "{:,.0f}".format(r.cost.projection_1000_inr) }} (${{ "{:,.2f}".format(r.cost.projection_1000_usd) }})
+
+| Item | Quantity | Rate | USD | INR |
+|---|---|---|---|---|
+{% for i in r.cost.items -%}
+| {{ i.label }} | {{ i.quantity }} {{ i.unit }} | {{ "₹" if i.rate_currency == "INR" else "$" }}{{ i.rate }} | {{ "%.4f" | format(i.cost_usd) }} | {{ "%.2f" | format(i.cost_inr) }} |
+{% endfor %}
+Rates last updated {{ r.cost.rates_last_updated }} · 1 USD = ₹{{ r.cost.usd_to_inr }}. {{ r.cost.note }}
+
+## 9. Issues and recommendations
+
+{% for i in r.issues %}
+- **[{{ i.severity }}] {{ i.title }}** - {{ i.detail }}
+  → {{ i.suggestion }}
+{%- else %}
+- No issues found.
+{%- endfor %}
+
+## 10. AI-written summary
+
+{% if r.ai_summary.status in ("ok", "flagged") -%}
+> _{{ r.ai_summary.label }}_
+{% if r.ai_summary.status == "flagged" %}
+> ⚠ Numbers not found in the report data: {{ r.ai_summary.unverified_numbers | join(", ") }}. Check before use.
+{% endif %}
+{{ r.ai_summary.text }}
+{%- elif r.ai_summary.status == "error" -%}
+Could not write the summary: {{ r.ai_summary.text }}
+{%- else -%}
+Off.
+{%- endif %}
+
+---
+_{{ r.test_mode_notice }} · {{ r.review_notice }}_

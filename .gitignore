@@ -1,0 +1,26 @@
+# Secrets - never commit
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+backend/data/
+data/
+*.db
+
+# Node
+node_modules/
+frontend/dist/
+
+# Vercel
+.vercel/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

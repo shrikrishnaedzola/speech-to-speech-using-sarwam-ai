@@ -1,0 +1,1486 @@
+{
+  "$defs": {
+    "AccuracySection": {
+      "properties": {
+        "field_accuracy": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Field Accuracy"
+        },
+        "completion": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Completion"
+        },
+        "filled": {
+          "title": "Filled",
+          "type": "integer"
+        },
+        "reviewed": {
+          "title": "Reviewed",
+          "type": "integer"
+        },
+        "correct": {
+          "title": "Correct",
+          "type": "integer"
+        },
+        "required_total": {
+          "title": "Required Total",
+          "type": "integer"
+        },
+        "required_filled": {
+          "title": "Required Filled",
+          "type": "integer"
+        },
+        "followups_correct": {
+          "title": "Followups Correct",
+          "type": "integer"
+        },
+        "followups_total": {
+          "title": "Followups Total",
+          "type": "integer"
+        },
+        "followup_issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Followup Issues",
+          "type": "array"
+        },
+        "invalid_answers": {
+          "title": "Invalid Answers",
+          "type": "integer"
+        },
+        "invalid_answers_fixed": {
+          "title": "Invalid Answers Fixed",
+          "type": "integer"
+        },
+        "corrections_saved": {
+          "title": "Corrections Saved",
+          "type": "integer"
+        },
+        "tool_calls_total": {
+          "title": "Tool Calls Total",
+          "type": "integer"
+        },
+        "tool_success_rate": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tool Success Rate"
+        },
+        "invalid_tool_calls": {
+          "title": "Invalid Tool Calls",
+          "type": "integer"
+        },
+        "validation_errors": {
+          "title": "Validation Errors",
+          "type": "integer"
+        },
+        "table": {
+          "items": {
+            "$ref": "#/$defs/FieldRow"
+          },
+          "title": "Table",
+          "type": "array"
+        }
+      },
+      "required": [
+        "field_accuracy",
+        "completion",
+        "filled",
+        "reviewed",
+        "correct",
+        "required_total",
+        "required_filled",
+        "followups_correct",
+        "followups_total",
+        "followup_issues",
+        "invalid_answers",
+        "invalid_answers_fixed",
+        "corrections_saved",
+        "tool_calls_total",
+        "tool_success_rate",
+        "invalid_tool_calls",
+        "validation_errors",
+        "table"
+      ],
+      "title": "AccuracySection",
+      "type": "object"
+    },
+    "AiSummary": {
+      "properties": {
+        "status": {
+          "enum": [
+            "off",
+            "ok",
+            "flagged",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        },
+        "unverified_numbers": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unverified Numbers",
+          "type": "array"
+        },
+        "label": {
+          "default": "AI-generated summary - review before sharing.",
+          "title": "Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "AiSummary",
+      "type": "object"
+    },
+    "AudioIssue": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "long_silence",
+            "talk_over",
+            "cut_off",
+            "repeated_phrase"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "offset_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Offset S"
+        },
+        "time": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Time"
+        },
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "detail"
+      ],
+      "title": "AudioIssue",
+      "type": "object"
+    },
+    "CallInfo": {
+      "properties": {
+        "call_id": {
+          "title": "Call Id",
+          "type": "string"
+        },
+        "provider": {
+          "enum": [
+            "openai",
+            "sarvam",
+            "gemini",
+            "elevenlabs"
+          ],
+          "title": "Provider",
+          "type": "string"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "models": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Models",
+          "type": "object"
+        },
+        "voice": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Voice"
+        },
+        "language_selected": {
+          "default": "auto",
+          "title": "Language Selected",
+          "type": "string"
+        },
+        "audio_mode": {
+          "default": "normal",
+          "enum": [
+            "normal",
+            "phone_8khz"
+          ],
+          "title": "Audio Mode",
+          "type": "string"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ended At"
+        },
+        "duration_s": {
+          "default": 0,
+          "title": "Duration S",
+          "type": "number"
+        },
+        "form_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Form Id"
+        },
+        "form_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Form Name"
+        },
+        "mode": {
+          "default": "live",
+          "enum": [
+            "live",
+            "simulate"
+          ],
+          "title": "Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "call_id",
+        "provider",
+        "model",
+        "started_at"
+      ],
+      "title": "CallInfo",
+      "type": "object"
+    },
+    "CostItem": {
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "quantity": {
+          "title": "Quantity",
+          "type": "number"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "rate": {
+          "title": "Rate",
+          "type": "number"
+        },
+        "rate_currency": {
+          "enum": [
+            "USD",
+            "INR"
+          ],
+          "title": "Rate Currency",
+          "type": "string"
+        },
+        "cost_usd": {
+          "title": "Cost Usd",
+          "type": "number"
+        },
+        "cost_inr": {
+          "title": "Cost Inr",
+          "type": "number"
+        }
+      },
+      "required": [
+        "label",
+        "quantity",
+        "unit",
+        "rate",
+        "rate_currency",
+        "cost_usd",
+        "cost_inr"
+      ],
+      "title": "CostItem",
+      "type": "object"
+    },
+    "CostSection": {
+      "properties": {
+        "items": {
+          "items": {
+            "$ref": "#/$defs/CostItem"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "total_usd": {
+          "title": "Total Usd",
+          "type": "number"
+        },
+        "total_inr": {
+          "title": "Total Inr",
+          "type": "number"
+        },
+        "per_minute_usd": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Per Minute Usd"
+        },
+        "per_minute_inr": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Per Minute Inr"
+        },
+        "per_completed_form_usd": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Per Completed Form Usd"
+        },
+        "per_completed_form_inr": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Per Completed Form Inr"
+        },
+        "projection_1000_usd": {
+          "title": "Projection 1000 Usd",
+          "type": "number"
+        },
+        "projection_1000_inr": {
+          "title": "Projection 1000 Inr",
+          "type": "number"
+        },
+        "usd_to_inr": {
+          "title": "Usd To Inr",
+          "type": "number"
+        },
+        "rates_last_updated": {
+          "title": "Rates Last Updated",
+          "type": "string"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "items",
+        "total_usd",
+        "total_inr",
+        "per_minute_usd",
+        "per_minute_inr",
+        "per_completed_form_usd",
+        "per_completed_form_inr",
+        "projection_1000_usd",
+        "projection_1000_inr",
+        "usd_to_inr",
+        "rates_last_updated",
+        "note"
+      ],
+      "title": "CostSection",
+      "type": "object"
+    },
+    "FieldRow": {
+      "properties": {
+        "field_id": {
+          "title": "Field Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "expected": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Expected"
+        },
+        "saved": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Saved"
+        },
+        "correct": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Correct"
+        },
+        "notes": {
+          "title": "Notes",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field_id",
+        "label",
+        "expected",
+        "saved",
+        "correct",
+        "notes"
+      ],
+      "title": "FieldRow",
+      "type": "object"
+    },
+    "Issue": {
+      "properties": {
+        "severity": {
+          "enum": [
+            "High",
+            "Medium",
+            "Low"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        },
+        "suggestion": {
+          "title": "Suggestion",
+          "type": "string"
+        }
+      },
+      "required": [
+        "severity",
+        "title",
+        "detail",
+        "suggestion"
+      ],
+      "title": "Issue",
+      "type": "object"
+    },
+    "LanguageCount": {
+      "properties": {
+        "language": {
+          "title": "Language",
+          "type": "string"
+        },
+        "caller_turns": {
+          "title": "Caller Turns",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "language",
+        "caller_turns"
+      ],
+      "title": "LanguageCount",
+      "type": "object"
+    },
+    "LanguageSection": {
+      "properties": {
+        "selected": {
+          "title": "Selected",
+          "type": "string"
+        },
+        "detected": {
+          "items": {
+            "$ref": "#/$defs/LanguageCount"
+          },
+          "title": "Detected",
+          "type": "array"
+        },
+        "agent_turns_checked": {
+          "title": "Agent Turns Checked",
+          "type": "integer"
+        },
+        "agent_correct_language_pct": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Agent Correct Language Pct"
+        },
+        "wrong_language_turns": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Wrong Language Turns",
+          "type": "array"
+        },
+        "code_mixing_rating": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Code Mixing Rating"
+        },
+        "mishearings_by_language": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Mishearings By Language",
+          "type": "object"
+        },
+        "method_note": {
+          "title": "Method Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "selected",
+        "detected",
+        "agent_turns_checked",
+        "agent_correct_language_pct",
+        "wrong_language_turns",
+        "code_mixing_rating",
+        "mishearings_by_language",
+        "method_note"
+      ],
+      "title": "LanguageSection",
+      "type": "object"
+    },
+    "LatencySection": {
+      "properties": {
+        "average_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Average Ms"
+        },
+        "median_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Median Ms"
+        },
+        "p90_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "P90 Ms"
+        },
+        "max_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Max Ms"
+        },
+        "rating": {
+          "anyOf": [
+            {
+              "enum": [
+                "Good",
+                "OK",
+                "Poor"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Rating"
+        },
+        "has_step_split": {
+          "title": "Has Step Split",
+          "type": "boolean"
+        },
+        "per_turn": {
+          "items": {
+            "$ref": "#/$defs/TurnLatency"
+          },
+          "title": "Per Turn",
+          "type": "array"
+        },
+        "slowest": {
+          "items": {
+            "$ref": "#/$defs/SlowTurn"
+          },
+          "title": "Slowest",
+          "type": "array"
+        }
+      },
+      "required": [
+        "average_ms",
+        "median_ms",
+        "p90_ms",
+        "max_ms",
+        "rating",
+        "has_step_split",
+        "per_turn",
+        "slowest"
+      ],
+      "title": "LatencySection",
+      "type": "object"
+    },
+    "Mishearing": {
+      "properties": {
+        "offset_s": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Offset S"
+        },
+        "time": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Time"
+        },
+        "kind": {
+          "enum": [
+            "transcription",
+            "caller_correction",
+            "value_changed",
+            "wrong_value",
+            "number_misheard"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "said": {
+          "title": "Said",
+          "type": "string"
+        },
+        "heard": {
+          "title": "Heard",
+          "type": "string"
+        },
+        "field_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Field Id"
+        },
+        "fixed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fixed"
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "detail": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail"
+        }
+      },
+      "required": [
+        "offset_s",
+        "time",
+        "kind",
+        "said",
+        "heard"
+      ],
+      "title": "Mishearing",
+      "type": "object"
+    },
+    "MishearingSection": {
+      "properties": {
+        "items": {
+          "items": {
+            "$ref": "#/$defs/Mishearing"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "total": {
+          "title": "Total",
+          "type": "integer"
+        },
+        "fixed": {
+          "title": "Fixed",
+          "type": "integer"
+        },
+        "script_available": {
+          "title": "Script Available",
+          "type": "boolean"
+        },
+        "wer": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wer"
+        },
+        "cer": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cer"
+        },
+        "aligned_turns": {
+          "default": 0,
+          "title": "Aligned Turns",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "items",
+        "total",
+        "fixed",
+        "script_available"
+      ],
+      "title": "MishearingSection",
+      "type": "object"
+    },
+    "MosScore": {
+      "properties": {
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "sig": {
+          "title": "Sig",
+          "type": "number"
+        },
+        "bak": {
+          "title": "Bak",
+          "type": "number"
+        },
+        "ovrl": {
+          "title": "Ovrl",
+          "type": "number"
+        }
+      },
+      "required": [
+        "model",
+        "sig",
+        "bak",
+        "ovrl"
+      ],
+      "title": "MosScore",
+      "type": "object"
+    },
+    "PiiInfo": {
+      "properties": {
+        "masked_count": {
+          "default": 0,
+          "title": "Masked Count",
+          "type": "integer"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "title": "PiiInfo",
+      "type": "object"
+    },
+    "Ratings": {
+      "properties": {
+        "naturalness": {
+          "anyOf": [
+            {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Naturalness"
+        },
+        "clarity": {
+          "anyOf": [
+            {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Clarity"
+        },
+        "pronunciation": {
+          "anyOf": [
+            {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pronunciation"
+        },
+        "accent_fit": {
+          "anyOf": [
+            {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Accent Fit"
+        },
+        "politeness": {
+          "anyOf": [
+            {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Politeness"
+        },
+        "code_mixing": {
+          "anyOf": [
+            {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Code Mixing"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "title": "Ratings",
+      "type": "object"
+    },
+    "SlowTurn": {
+      "properties": {
+        "turn_index": {
+          "title": "Turn Index",
+          "type": "integer"
+        },
+        "total_ms": {
+          "title": "Total Ms",
+          "type": "number"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "turn_index",
+        "total_ms",
+        "reason"
+      ],
+      "title": "SlowTurn",
+      "type": "object"
+    },
+    "SummarySection": {
+      "properties": {
+        "overall_score": {
+          "title": "Overall Score",
+          "type": "number"
+        },
+        "verdict": {
+          "enum": [
+            "Good",
+            "Needs improvement",
+            "Poor"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        },
+        "section_scores": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Section Scores",
+          "type": "object"
+        },
+        "weights_used": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Weights Used",
+          "type": "object"
+        },
+        "missing_sections": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Sections",
+          "type": "array"
+        },
+        "strengths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Strengths",
+          "type": "array"
+        },
+        "problems": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Problems",
+          "type": "array"
+        }
+      },
+      "required": [
+        "overall_score",
+        "verdict",
+        "section_scores",
+        "weights_used",
+        "missing_sections",
+        "strengths",
+        "problems"
+      ],
+      "title": "SummarySection",
+      "type": "object"
+    },
+    "TranscriptItem": {
+      "properties": {
+        "role": {
+          "enum": [
+            "caller",
+            "agent",
+            "tool"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "offset_s": {
+          "title": "Offset S",
+          "type": "number"
+        },
+        "time": {
+          "title": "Time",
+          "type": "string"
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "interrupted": {
+          "default": false,
+          "title": "Interrupted",
+          "type": "boolean"
+        },
+        "highlights": {
+          "items": {
+            "enum": [
+              "mishearing",
+              "reasked",
+              "tool",
+              "interruption"
+            ],
+            "type": "string"
+          },
+          "title": "Highlights",
+          "type": "array"
+        },
+        "tool": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool"
+        }
+      },
+      "required": [
+        "role",
+        "text",
+        "offset_s",
+        "time"
+      ],
+      "title": "TranscriptItem",
+      "type": "object"
+    },
+    "TurnLatency": {
+      "properties": {
+        "turn_index": {
+          "title": "Turn Index",
+          "type": "integer"
+        },
+        "total_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Total Ms"
+        },
+        "stt_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stt Ms"
+        },
+        "turn_wait_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Turn Wait Ms"
+        },
+        "llm_ttft_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Llm Ttft Ms"
+        },
+        "tts_ttfb_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tts Ttfb Ms"
+        },
+        "other_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Other Ms"
+        },
+        "rating": {
+          "anyOf": [
+            {
+              "enum": [
+                "Good",
+                "OK",
+                "Poor"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rating"
+        }
+      },
+      "required": [
+        "turn_index",
+        "total_ms"
+      ],
+      "title": "TurnLatency",
+      "type": "object"
+    },
+    "VoiceQualitySection": {
+      "properties": {
+        "ratings": {
+          "$ref": "#/$defs/Ratings"
+        },
+        "rating_average": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Rating Average"
+        },
+        "mos": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MosScore"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "mos_status": {
+          "title": "Mos Status",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/AudioIssue"
+          },
+          "title": "Issues",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ratings",
+        "rating_average",
+        "mos_status",
+        "issues"
+      ],
+      "title": "VoiceQualitySection",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "test_mode_notice": {
+      "default": "TEST MODE - dummy data only",
+      "title": "Test Mode Notice",
+      "type": "string"
+    },
+    "review_notice": {
+      "default": "AI-assisted test report - must be reviewed by a team member before sharing outside EdZola.",
+      "title": "Review Notice",
+      "type": "string"
+    },
+    "call": {
+      "$ref": "#/$defs/CallInfo"
+    },
+    "pii": {
+      "$ref": "#/$defs/PiiInfo"
+    },
+    "summary": {
+      "$ref": "#/$defs/SummarySection"
+    },
+    "transcript": {
+      "items": {
+        "$ref": "#/$defs/TranscriptItem"
+      },
+      "title": "Transcript",
+      "type": "array"
+    },
+    "mishearings": {
+      "$ref": "#/$defs/MishearingSection"
+    },
+    "voice_quality": {
+      "$ref": "#/$defs/VoiceQualitySection"
+    },
+    "latency": {
+      "$ref": "#/$defs/LatencySection"
+    },
+    "language": {
+      "$ref": "#/$defs/LanguageSection"
+    },
+    "accuracy": {
+      "$ref": "#/$defs/AccuracySection"
+    },
+    "cost": {
+      "$ref": "#/$defs/CostSection"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/Issue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "ai_summary": {
+      "$ref": "#/$defs/AiSummary"
+    }
+  },
+  "required": [
+    "generated_at",
+    "call",
+    "pii",
+    "summary",
+    "transcript",
+    "mishearings",
+    "voice_quality",
+    "latency",
+    "language",
+    "accuracy",
+    "cost",
+    "issues",
+    "ai_summary"
+  ],
+  "title": "Zolabs voice tester post-call report",
+  "type": "object",
+  "$id": "https://edzola.com/zolabs/voice-tester/report.schema.json"
+}

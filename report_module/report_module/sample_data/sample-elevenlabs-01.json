@@ -1,0 +1,583 @@
+{
+  "schema_version": "1.0",
+  "call": {
+    "call_id": "sample-elevenlabs-01",
+    "provider": "elevenlabs",
+    "model": "eleven_flash_v2_5 + LLM",
+    "voice": "Test voice A",
+    "language_selected": "hi-IN",
+    "audio_mode": "normal",
+    "mode": "simulate",
+    "started_at": "2026-10-27T10:00:00+00:00",
+    "ended_at": "2026-10-27T10:01:12.700000+00:00",
+    "duration_s": 72.7,
+    "form_id": "program_feedback_survey_test",
+    "form_name": "Program Feedback Survey (Test)"
+  },
+  "form_fields": [
+    {
+      "id": "caller_name",
+      "label": "Caller name",
+      "type": "text",
+      "required": true
+    },
+    {
+      "id": "age",
+      "label": "Age",
+      "type": "number",
+      "required": true
+    },
+    {
+      "id": "district",
+      "label": "District",
+      "type": "text",
+      "required": true
+    },
+    {
+      "id": "preferred_language",
+      "label": "Preferred language",
+      "type": "choice",
+      "required": false
+    },
+    {
+      "id": "attended_sessions",
+      "label": "Attended sessions",
+      "type": "yes_no",
+      "required": true
+    },
+    {
+      "id": "reason_not_attended",
+      "label": "Reason for not attending",
+      "type": "text",
+      "required": true,
+      "show_if": {
+        "field": "attended_sessions",
+        "op": "eq",
+        "value": "no"
+      }
+    },
+    {
+      "id": "sessions_attended_count",
+      "label": "Sessions attended",
+      "type": "number",
+      "required": true,
+      "show_if": {
+        "field": "attended_sessions",
+        "op": "eq",
+        "value": "yes"
+      }
+    },
+    {
+      "id": "number_of_children",
+      "label": "Number of children",
+      "type": "number",
+      "required": true
+    },
+    {
+      "id": "children_ages",
+      "label": "Children's ages",
+      "type": "number_list",
+      "required": true,
+      "show_if": {
+        "field": "number_of_children",
+        "op": "gt",
+        "value": 0
+      }
+    },
+    {
+      "id": "satisfaction_rating",
+      "label": "Satisfaction rating (1-5)",
+      "type": "number",
+      "required": true
+    },
+    {
+      "id": "improvement_suggestion",
+      "label": "Improvement suggestion",
+      "type": "text",
+      "required": false
+    },
+    {
+      "id": "consent_to_followup",
+      "label": "Consent to follow-up",
+      "type": "yes_no",
+      "required": true
+    }
+  ],
+  "transcript": [
+    {
+      "role": "agent",
+      "text": "नमस्ते! मैं एक NGO कार्यक्रम की ओर से बोल रही हूँ। यह कॉल लगभग तीन मिनट की होगी। क्या अभी बात कर सकते हैं?",
+      "offset_s": 1.0,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "हाँ, बोलिए।",
+      "offset_s": 9.13,
+      "language": "hi-IN"
+    },
+    {
+      "role": "agent",
+      "text": "आपका नाम क्या है?",
+      "offset_s": 10.78,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "मेरा नाम टेस्ट यूज़र है।",
+      "offset_s": 14.48,
+      "language": "hi-IN"
+    },
+    {
+      "role": "agent",
+      "text": "आपकी उम्र क्या है? कृपया अपनी उम्र बताइए और",
+      "offset_s": 16.78,
+      "interrupted": true
+    },
+    {
+      "role": "caller",
+      "text": "चालीस।",
+      "offset_s": 20.78,
+      "language": "hi-IN"
+    },
+    {
+      "role": "agent",
+      "text": "आप किस ज़िले में रहते हैं?",
+      "offset_s": 22.5,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "सैंपल ज़िला।",
+      "offset_s": 25.9,
+      "language": "hi-IN"
+    },
+    {
+      "role": "agent",
+      "text": "क्या आपने कोई सत्र अटेंड किया?",
+      "offset_s": 27.79,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "हाँ, किया।",
+      "offset_s": 31.29,
+      "language": "hi-IN"
+    },
+    {
+      "role": "agent",
+      "text": "आप सत्र में क्यों नहीं आ पाए?",
+      "offset_s": 33.94,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "मैं आया था, दो सत्र।",
+      "offset_s": 38.08,
+      "language": "hi-IN"
+    },
+    {
+      "role": "agent",
+      "text": "क्या आप कृपया दोबारा बता सकते हैं कितने सत्र?",
+      "offset_s": 39.66,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "दो।",
+      "offset_s": 43.57,
+      "language": "hi-IN"
+    },
+    {
+      "role": "agent",
+      "text": "क्या आप कृपया दोबारा बता सकते हैं कितने सत्र?",
+      "offset_s": 45.51,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "दो सत्र।",
+      "offset_s": 49.77,
+      "language": "hi-IN"
+    },
+    {
+      "role": "agent",
+      "text": "आपके कितने बच्चे हैं?",
+      "offset_s": 51.53,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "कोई नहीं।",
+      "offset_s": 54.42,
+      "language": "hi-IN"
+    },
+    {
+      "role": "agent",
+      "text": "एक से पाँच तक, आप कितने संतुष्ट हैं?",
+      "offset_s": 56.52,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "तीन।",
+      "offset_s": 59.96,
+      "language": "hi-IN"
+    },
+    {
+      "role": "agent",
+      "text": "क्या हम बाद में आपसे संपर्क कर सकते हैं?",
+      "offset_s": 61.79,
+      "interrupted": false
+    },
+    {
+      "role": "caller",
+      "text": "अभी मुझे जाना है, धन्यवाद।",
+      "offset_s": 67.01,
+      "language": "hi-IN"
+    },
+    {
+      "role": "agent",
+      "text": "ठीक है, धन्यवाद। नमस्ते।",
+      "offset_s": 68.71,
+      "interrupted": false
+    }
+  ],
+  "answers": [
+    {
+      "field_id": "caller_name",
+      "attempts": 1,
+      "value": "Test User",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "age",
+      "attempts": 1,
+      "value": 40,
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "district",
+      "attempts": 1,
+      "value": "Sample district",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "attended_sessions",
+      "attempts": 1,
+      "value": "yes",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "reason_not_attended",
+      "attempts": 1,
+      "value": "Attended two sessions",
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "sessions_attended_count",
+      "attempts": 2,
+      "status": "filled",
+      "value": 2,
+      "confidence": "high"
+    },
+    {
+      "field_id": "number_of_children",
+      "attempts": 1,
+      "value": 0,
+      "status": "filled",
+      "confidence": "high"
+    },
+    {
+      "field_id": "satisfaction_rating",
+      "attempts": 1,
+      "value": 3,
+      "status": "filled",
+      "confidence": "high"
+    }
+  ],
+  "reviews": [
+    {
+      "field_id": "caller_name",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "district",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "attended_sessions",
+      "verdict": "correct"
+    },
+    {
+      "field_id": "age",
+      "verdict": "wrong",
+      "expected_value": "45"
+    }
+  ],
+  "turns": [
+    {
+      "turn_index": 0,
+      "total_ms": 900,
+      "agent_text": "नमस्ते! मैं एक NGO कार्यक्रम की ओर से बोल रही हूँ। यह कॉल लगभग तीन मिनट की होगी। क्या अभी बात कर सकते हैं?"
+    },
+    {
+      "turn_index": 1,
+      "total_ms": 1650,
+      "user_text": "हाँ, बोलिए।",
+      "agent_text": "आपका नाम क्या है?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 2,
+      "total_ms": 2300,
+      "user_text": "मेरा नाम टेस्ट यूज़र है।",
+      "agent_text": "आपकी उम्र क्या है? कृपया अपनी उम्र बताइए और",
+      "interrupted": true
+    },
+    {
+      "turn_index": 3,
+      "total_ms": 1720,
+      "user_text": "चालीस।",
+      "agent_text": "आप किस ज़िले में रहते हैं?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 4,
+      "total_ms": 1890,
+      "user_text": "सैंपल ज़िला।",
+      "agent_text": "क्या आपने कोई सत्र अटेंड किया?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 5,
+      "total_ms": 2650,
+      "user_text": "हाँ, किया।",
+      "agent_text": "आप सत्र में क्यों नहीं आ पाए?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 6,
+      "total_ms": 1580,
+      "user_text": "मैं आया था, दो सत्र।",
+      "agent_text": "क्या आप कृपया दोबारा बता सकते हैं कितने सत्र?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 7,
+      "total_ms": 1940,
+      "user_text": "दो।",
+      "agent_text": "क्या आप कृपया दोबारा बता सकते हैं कितने सत्र?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 8,
+      "total_ms": 1760,
+      "user_text": "दो सत्र।",
+      "agent_text": "आपके कितने बच्चे हैं?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 9,
+      "total_ms": 2100,
+      "user_text": "कोई नहीं।",
+      "agent_text": "एक से पाँच तक, आप कितने संतुष्ट हैं?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 10,
+      "total_ms": 1830,
+      "user_text": "तीन।",
+      "agent_text": "क्या हम बाद में आपसे संपर्क कर सकते हैं?",
+      "interrupted": false
+    },
+    {
+      "turn_index": 11,
+      "total_ms": 1700,
+      "user_text": "अभी मुझे जाना है, धन्यवाद।",
+      "agent_text": "ठीक है, धन्यवाद। नमस्ते।",
+      "interrupted": false
+    }
+  ],
+  "tool_calls": [
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "caller_name",
+        "value": "Test User",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "caller_name": "Test User"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 14.78
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "age",
+        "value": "40",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "age": 40
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 21.13
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "district",
+        "value": "Sample district",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "district": "Sample district"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 26.3
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "attended_sessions",
+        "value": "yes",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "attended_sessions": "yes"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 31.74
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "reason_not_attended",
+        "value": "Attended two sessions",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "reason_not_attended": "Attended two sessions"
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 38.58
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "sessions_attended_count",
+        "value": "do",
+        "confidence": "high"
+      },
+      "success": false,
+      "result": {
+        "ok": false,
+        "error": "Could not understand a single number. Ask again."
+      },
+      "duration_ms": 8,
+      "offset_s": 44.12
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "sessions_attended_count",
+        "value": "2",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "sessions_attended_count": 2
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 50.37
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "number_of_children",
+        "value": "0",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "number_of_children": 0
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 55.07
+    },
+    {
+      "name": "save_answer",
+      "arguments": {
+        "field_id": "satisfaction_rating",
+        "value": "3",
+        "confidence": "high"
+      },
+      "success": true,
+      "result": {
+        "ok": true,
+        "saved": {
+          "satisfaction_rating": 3
+        }
+      },
+      "duration_ms": 9,
+      "offset_s": 60.66
+    },
+    {
+      "name": "complete_form",
+      "arguments": {},
+      "success": false,
+      "result": {
+        "ok": false,
+        "missing_fields": [
+          {
+            "field_id": "consent_to_followup"
+          }
+        ]
+      },
+      "duration_ms": 7,
+      "offset_s": 60.71
+    }
+  ],
+  "usage": {
+    "call_minutes": 1.212
+  },
+  "interruptions": 1,
+  "form_completed": false,
+  "recording_path": null,
+  "expected_script": null,
+  "errors": []
+}

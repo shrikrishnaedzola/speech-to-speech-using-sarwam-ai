@@ -1,0 +1,16 @@
+# Versions tested together (Oct 2026). Pipecat's API changes often - keep it pinned.
+pipecat-ai[sarvam,webrtc]==1.14.0
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+SQLAlchemy==2.1.6
+pymysql>=1.1.0
+cryptography>=42.0.0
+loguru>=0.7.0
+python-dotenv==1.2.4
+
+# Tests
+pytest==9.1.1
+httpx==0.28.1
+
+# Shared post-call report module (lives next to this backend)
+-e ../report_module

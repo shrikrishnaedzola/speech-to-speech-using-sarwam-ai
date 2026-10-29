@@ -1,0 +1,11 @@
+{
+  "name": "sarvam-voice-agent-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "cd backend && uvicorn app.main:app --reload --port 8010"
+  }
+}
+
