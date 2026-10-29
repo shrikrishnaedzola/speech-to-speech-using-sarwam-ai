@@ -22,7 +22,7 @@ SARVAM_API_KEY = os.getenv("SARVAM_API_KEY", "")
 # On Vercel only /tmp is writable (and it is wiped between cold starts).
 _DEFAULT_DB_DIR = Path("/tmp") if os.getenv("VERCEL") else BACKEND_DIR / "data"
 DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("MYSQL_URL") or f"sqlite:///{(_DEFAULT_DB_DIR / 'tester.db').as_posix()}"
-CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5180").split(",")]
+CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5180,http://127.0.0.1:5180,http://localhost:8000,http://127.0.0.1:8000").split(",")]
 # Public STUN server; enough for local testing. Add a TURN server for remote testers.
 ICE_SERVERS = [s.strip() for s in os.getenv("ICE_SERVERS", "stun:stun.l.google.com:19302").split(",") if s.strip()]
 

@@ -30,21 +30,38 @@ else:
 engine = create_engine(effective_url, **engine_kwargs)
 SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
 
+_initialized = False
+
 
 class Base(DeclarativeBase):
     pass
-
-
-def get_db():
-    """FastAPI dependency: one DB session per request."""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def init_db():
     from app import models  # noqa: F401  (registers the tables)
 
     Base.metadata.create_all(engine)
+
+
+def ensure_db_initialized():
+    """Ensure database tables exist and seed forms are loaded."""
+    global _initialized
+    if not _initialized:
+        init_db()
+        try:
+            from app.services.forms_loader import load_seed_forms
+            with SessionLocal() as db:
+                load_seed_forms(db)
+        except Exception:
+            pass
+        _initialized = True
+
+
+def get_db():
+    """FastAPI dependency: one DB session per request."""
+    ensure_db_initialized()
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

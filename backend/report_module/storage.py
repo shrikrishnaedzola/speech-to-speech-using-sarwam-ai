@@ -33,9 +33,18 @@ reports_table = Table(
 class ReportStore:
     def __init__(self, engine: Engine):
         self.engine = engine
-        metadata.create_all(engine)
+        self._created = False
+
+    def _ensure_tables(self):
+        if not self._created:
+            try:
+                metadata.create_all(self.engine)
+                self._created = True
+            except Exception:
+                pass
 
     def _upsert(self, table: Table, call_id: str, values: dict):
+        self._ensure_tables()
         with self.engine.begin() as conn:
             exists = conn.execute(select(table.c.call_id).where(table.c.call_id == call_id)).first()
             if exists:
@@ -44,6 +53,7 @@ class ReportStore:
                 conn.execute(table.insert().values(call_id=call_id, **values))
 
     def get_ratings(self, call_id: str) -> Ratings | None:
+        self._ensure_tables()
         with self.engine.connect() as conn:
             row = conn.execute(select(ratings_table.c.ratings).where(ratings_table.c.call_id == call_id)).first()
         return Ratings.model_validate(row[0]) if row else None
@@ -52,6 +62,7 @@ class ReportStore:
         self._upsert(ratings_table, call_id, {"ratings": ratings.model_dump(), "updated_at": datetime.now(timezone.utc)})
 
     def get_report(self, call_id: str) -> Report | None:
+        self._ensure_tables()
         with self.engine.connect() as conn:
             row = conn.execute(select(reports_table.c.report).where(reports_table.c.call_id == call_id)).first()
         return Report.model_validate(row[0]) if row else None

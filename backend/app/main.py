@@ -12,9 +12,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from loguru import logger
+from sqlalchemy import text
 
 from app.config import CORS_ORIGINS, has_api_key
-from app.db import SessionLocal, init_db
+from app.db import SessionLocal, ensure_db_initialized, init_db
 from report_module.router import make_report_router
 
 from app.routers import calls, forms, session, tools
@@ -45,7 +46,20 @@ app.include_router(make_report_router(report_service))
 
 @app.get("/api/health")
 def health():
-    return {"ok": True, "api_key_configured": has_api_key()}
+    db_ok = True
+    db_error = None
+    try:
+        ensure_db_initialized()
+        with SessionLocal() as db:
+            db.execute(text("SELECT 1"))
+    except Exception as e:
+        db_ok = False
+        db_error = str(e)
+    return {
+        "ok": True,
+        "database": {"connected": db_ok, "error": db_error},
+        "api_key_configured": has_api_key(),
+    }
 
 
 # Single-service deploys (Render/Docker): serve the built frontend from the same origin,
