@@ -13,4 +13,7 @@ pytest==9.1.1
 httpx==0.28.1
 
 # Shared post-call report module (lives next to this backend)
--e ../report_module[charts]
+# matplotlib + numpy: charts in the PDF export (optional extra of report_module, kept out of the Vercel build)
+matplotlib>=3.8
+numpy>=1.26
+-e ../report_module
