@@ -15,7 +15,15 @@ from pathlib import Path
 from fpdf import FPDF, FontFace
 from fpdf.enums import XPos, YPos
 
-from report_module.exporters.charts import latency_chart, section_scores_chart
+try:
+    from report_module.exporters.charts import latency_chart, section_scores_chart
+except ImportError:  # matplotlib is optional (left out of the slim Vercel build): PDF is built without charts
+    def latency_chart(r):
+        return None
+
+    def section_scores_chart(r):
+        return None
+
 from report_module.exporters.markdown import ISSUE_KINDS, KINDS, LABELS, RATING_LABELS, ms, pct
 from report_module.schema import Report
 
@@ -112,7 +120,9 @@ def to_pdf(report: Report) -> bytes:
     pdf.table(["Provider", "Model", "Voice", "Language", "Audio", "Duration", "Mode"],
               [[r.call.provider, r.call.model, r.call.voice or "-", r.call.language_selected,
                 "Phone 8 kHz" if r.call.audio_mode == "phone_8khz" else "Normal", f"{round(r.call.duration_s)} s", r.call.mode]])
-    pdf.image(io.BytesIO(section_scores_chart(r)), w=150)
+    scores_chart = section_scores_chart(r)
+    if scores_chart:
+        pdf.image(io.BytesIO(scores_chart), w=150)
     if r.summary.missing_sections:
         pdf.para("Not in the score (no data): " + ", ".join(LABELS[k] for k in r.summary.missing_sections), 8, MUTED)
     pdf.para("Key strengths", 9, GREEN, bold=True)
