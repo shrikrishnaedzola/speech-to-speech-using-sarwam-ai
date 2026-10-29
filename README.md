@@ -247,9 +247,28 @@ frontend/src/
 - **AI-assisted code.** This code was written with AI help (Claude Code). Under the EdZola policy it needs a
   human code review before merge or wider use.
 
-## 12. Vercel Deployment (Unified Root Directory + MySQL)
+## 12. Deployment
 
-The project is structured to deploy directly from the **root directory** to Vercel without deploying backend and frontend separately.
+### Render (recommended: live voice calls work)
+
+One Render web service runs the FastAPI backend (with pipecat) and serves the built frontend from the same
+origin, so `/api` and the events WebSocket need no extra setup. It is defined by `Dockerfile` and `render.yaml`.
+
+1. In Render: **New > Blueprint**, pick this repo and branch. Render reads `render.yaml`.
+2. Set the environment variables in the Render dashboard (never in Git):
+   - `SARVAM_API_KEY` (required)
+   - `DATABASE_URL` (optional MySQL URL; without it SQLite is used and is wiped on every redeploy)
+   - `ICE_SERVERS` (optional TURN server for testers on other networks)
+3. Deploy. Health check: `/api/health`.
+
+Live calls need an always-on instance, so use a paid plan (the free tier sleeps).
+
+### Vercel (Simulate mode, forms and reports only)
+
+Vercel serverless cannot hold a WebRTC/WebSocket voice call, and the function size limit forces pipecat out of
+the root `requirements.txt`. Live-call endpoints return 503 there; Simulate mode and reports work.
+
+#### Vercel details
 
 ### Files configured for Root Deployment:
 1. `vercel.json` – Configures static frontend build output (`frontend/dist`), serverless Python API function (`api/index.py`), and `/api/(.*)` rewrites.
