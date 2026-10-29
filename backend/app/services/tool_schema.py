@@ -15,9 +15,6 @@ import json
 import re
 from typing import Any
 
-from pipecat.adapters.llm.schemas.function_schema import FunctionSchema
-from pipecat.adapters.llm.schemas.tools_schema import ToolsSchema
-
 CONFIDENCE_VALUES = ["high", "low"]
 
 
@@ -73,8 +70,12 @@ def tool_definitions(field_ids: list[str]) -> list[dict]:
     ]
 
 
-def pipecat_tools(field_ids: list[str]) -> ToolsSchema:
+def pipecat_tools(field_ids: list[str]):
     """The same tools in Pipecat's format (used in the LLM context)."""
+    # Imported here so the slim Vercel build (no pipecat) can still import this module.
+    from pipecat.adapters.llm.schemas.function_schema import FunctionSchema
+    from pipecat.adapters.llm.schemas.tools_schema import ToolsSchema
+
     return ToolsSchema(
         standard_tools=[
             FunctionSchema(

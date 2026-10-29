@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI):
     if not has_api_key():
         logger.warning("SARVAM_API_KEY is not set: live calls are disabled, Simulate mode still works.")
     yield
-    await session.webrtc_handler.close()
+    await session.close_webrtc_handler()
 
 
 app = FastAPI(title="Zolabs Voice Form Tester - Sarvam Pipeline", lifespan=lifespan)

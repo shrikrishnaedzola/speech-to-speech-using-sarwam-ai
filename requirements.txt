@@ -1,5 +1,6 @@
-# Unified dependencies for Vercel Serverless Function & FastAPI backend
-pipecat-ai[sarvam,webrtc]==1.14.0
+# Slim dependencies for the Vercel Serverless Function (500 MB limit).
+# pipecat-ai (live WebRTC calls) is NOT included: it pulls in opencv, numba, onnxruntime, av
+# and pushes the bundle past the limit. For live calls use backend/requirements.txt on a long-running host.
 fastapi>=0.110.0
 uvicorn[standard]>=0.28.0
 SQLAlchemy>=2.0.0

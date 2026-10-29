@@ -9,14 +9,11 @@ POST /api/simulate                start a Simulate-mode call (no mic, no Sarvam)
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
-from pipecat.transports.smallwebrtc.connection import IceServer
-from pipecat.transports.smallwebrtc.request_handler import SmallWebRTCRequest, SmallWebRTCRequestHandler
 from sqlalchemy.orm import Session
 
 from app.config import ICE_SERVERS, has_api_key
 from app.db import get_db
 from app.models import Call, Form
-from app.pipeline.runner import end_call, start_call_task
 from app.schemas import SessionRequest, SimulateRequest
 from app.services.events import bus
 from app.services.simulate import start_simulation
@@ -24,7 +21,30 @@ from app.services.tools import form_state
 
 router = APIRouter(prefix="/api")
 
-webrtc_handler = SmallWebRTCRequestHandler(ice_servers=[IceServer(urls=ICE_SERVERS)])
+# Live calls need pipecat, which is left out of the slim Vercel build (serverless
+# cannot hold a WebRTC session anyway). Import it on first use.
+_webrtc_handler = None
+
+
+def _live_unavailable() -> HTTPException:
+    return HTTPException(503, "Live calls are not available on this deployment. Use Simulate mode.")
+
+
+def get_webrtc_handler():
+    global _webrtc_handler
+    if _webrtc_handler is None:
+        try:
+            from pipecat.transports.smallwebrtc.connection import IceServer
+            from pipecat.transports.smallwebrtc.request_handler import SmallWebRTCRequestHandler
+        except ImportError:
+            raise _live_unavailable()
+        _webrtc_handler = SmallWebRTCRequestHandler(ice_servers=[IceServer(urls=ICE_SERVERS)])
+    return _webrtc_handler
+
+
+async def close_webrtc_handler():
+    if _webrtc_handler is not None:
+        await _webrtc_handler.close()
 
 
 def _create_call(db: Session, form_id: str, settings: dict, mode: str) -> Call:
@@ -55,6 +75,11 @@ async def create_session(body: SessionRequest, db: Session = Depends(get_db)):
 @router.post("/webrtc/offer")
 async def webrtc_offer(request: Request, call_id: str = Query(...), db: Session = Depends(get_db)):
     """Browser sends its SDP offer; we answer and start the voice pipeline for this call."""
+    handler = get_webrtc_handler()
+    from pipecat.transports.smallwebrtc.request_handler import SmallWebRTCRequest
+
+    from app.pipeline.runner import start_call_task
+
     call = db.get(Call, call_id)
     if call is None or call.mode != "live":
         raise HTTPException(404, "Call not found")
@@ -64,11 +89,15 @@ async def webrtc_offer(request: Request, call_id: str = Query(...), db: Session 
     async def on_connection(connection):
         start_call_task(connection, call_id)
 
-    return await webrtc_handler.handle_web_request(offer, on_connection)
+    return await handler.handle_web_request(offer, on_connection)
 
 
 @router.post("/session/{call_id}/end")
 async def end_session(call_id: str):
+    try:
+        from app.pipeline.runner import end_call
+    except ImportError:
+        raise _live_unavailable()
     stopped = await end_call(call_id)
     return {"stopped": stopped}
 
