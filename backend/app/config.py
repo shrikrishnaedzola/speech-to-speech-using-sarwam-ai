@@ -47,8 +47,12 @@ def _parse_ice_servers():
 
 ICE_SERVERS = _parse_ice_servers()
 
-# Optional: fetch fresh TURN credentials from Metered at call time (METERED_DOMAIN is the
-# "<app>.metered.live" host). Falls back to ICE_SERVERS if unset or the request fails.
+# Optional: fetch fresh TURN credentials from a provider at call time. Tried in this order, then
+# falls back to ICE_SERVERS if none is set or the request fails:
+#   Cloudflare: CLOUDFLARE_TURN_KEY_ID + CLOUDFLARE_TURN_API_TOKEN
+#   Metered:    METERED_DOMAIN ("<app>.metered.live") + METERED_API_KEY
+CLOUDFLARE_TURN_KEY_ID = os.getenv("CLOUDFLARE_TURN_KEY_ID", "").strip()
+CLOUDFLARE_TURN_API_TOKEN = os.getenv("CLOUDFLARE_TURN_API_TOKEN", "").strip()
 METERED_DOMAIN = os.getenv("METERED_DOMAIN", "").strip().removeprefix("https://").strip("/")
 METERED_API_KEY = os.getenv("METERED_API_KEY", "").strip()
 _ICE_CACHE_SECONDS = 3600
@@ -56,21 +60,45 @@ _ice_cache: dict = {"at": 0.0, "servers": None}
 _ice_lock = threading.Lock()
 
 
+def _fetch_cloudflare() -> list:
+    url = f"https://rtc.live.cloudflare.com/v1/turn/keys/{CLOUDFLARE_TURN_KEY_ID}/credentials/generate-ice-servers"
+    req = urllib.request.Request(
+        url,
+        data=json.dumps({"ttl": 86400}).encode(),
+        headers={"Authorization": f"Bearer {CLOUDFLARE_TURN_API_TOKEN}", "Content-Type": "application/json"},
+    )
+    with urllib.request.urlopen(req, timeout=5) as res:
+        data = json.loads(res.read())["iceServers"]
+    servers = [data] if isinstance(data, dict) else data
+    for server in servers:  # browsers block port 53, so drop those URLs
+        urls = server["urls"] if isinstance(server["urls"], list) else [server["urls"]]
+        server["urls"] = [u for u in urls if ":53" not in u]
+    return servers
+
+
+def _fetch_metered() -> list:
+    url = f"https://{METERED_DOMAIN}/api/v1/turn/credentials?" + urllib.parse.urlencode({"apiKey": METERED_API_KEY})
+    with urllib.request.urlopen(url, timeout=5) as res:
+        return json.loads(res.read())
+
+
 def get_ice_servers() -> list:
     """ICE servers for new calls. Blocking (HTTP): call it from a worker thread."""
-    if not (METERED_DOMAIN and METERED_API_KEY):
+    if CLOUDFLARE_TURN_KEY_ID and CLOUDFLARE_TURN_API_TOKEN:
+        fetch = _fetch_cloudflare
+    elif METERED_DOMAIN and METERED_API_KEY:
+        fetch = _fetch_metered
+    else:
         return ICE_SERVERS
     with _ice_lock:
         if _ice_cache["servers"] and time.time() - _ice_cache["at"] < _ICE_CACHE_SECONDS:
             return _ice_cache["servers"]
-        url = f"https://{METERED_DOMAIN}/api/v1/turn/credentials?" + urllib.parse.urlencode({"apiKey": METERED_API_KEY})
         try:
-            with urllib.request.urlopen(url, timeout=5) as res:
-                servers = json.loads(res.read())
+            servers = fetch()
             if not isinstance(servers, list) or not servers:
                 raise ValueError("unexpected response")
-        except Exception as e:  # never log the URL: it contains the API key
-            print(f"WARNING: could not fetch Metered ICE servers ({type(e).__name__}); using ICE_SERVERS.")
+        except Exception as e:  # never log the URL or headers: they contain the secret
+            print(f"WARNING: could not fetch TURN credentials ({type(e).__name__}); using ICE_SERVERS.")
             return _ice_cache["servers"] or ICE_SERVERS
         _ice_cache.update(at=time.time(), servers=servers)
         return servers
