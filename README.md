@@ -41,17 +41,16 @@ never sees the key: every Sarvam call goes through the backend.
 Use two terminals:
 
 ```bash
-# Terminal 1 – backend on http://localhost:8010
+# Terminal 1 – backend on http://localhost:8000
 cd backend
-.venv\Scripts\python -m uvicorn app.main:app --reload --port 8010
+.venv\Scripts\python -m uvicorn app.main:app --reload --port 8000
 
 # Terminal 2 – frontend on http://localhost:5180 (forwards /api to the backend)
 cd frontend
 npm run dev
 ```
 
-Open **http://localhost:5180**. Ports 8010 and 5180 were picked to avoid the common 8000 and 5173,
-which other apps were already using on the dev machine. To change them, edit
+Open **http://localhost:5180**. The backend uses port 8000 and the frontend 5180 (to avoid the common 5173). To change them, edit
 `frontend/vite.config.js` (both the port and the proxy target) and `CORS_ORIGINS` in `.env`.
 
 ## 3. Run a test call

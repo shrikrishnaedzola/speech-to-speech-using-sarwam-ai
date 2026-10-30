@@ -1,7 +1,7 @@
 """FastAPI app entry point.
 
 Run (from the backend folder):
-    .venv\\Scripts\\python -m uvicorn app.main:app --reload --port 8010
+    .venv\\Scripts\\python -m uvicorn app.main:app --reload --port 8000
 """
 
 from contextlib import asynccontextmanager
