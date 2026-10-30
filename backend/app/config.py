@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -13,16 +14,31 @@ _DEFAULT_DB_DIR = Path("/tmp") if os.getenv("VERCEL") else BACKEND_DIR / "data"
 DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("MYSQL_URL") or f"sqlite:///{(_DEFAULT_DB_DIR / 'tester.db').as_posix()}"
 CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5180,http://127.0.0.1:5180,http://localhost:8000,http://127.0.0.1:8000").split(",")]
 
-# Parse ICE / STUN / TURN servers: accepts JSON array or comma-separated strings
+# Parse ICE / STUN / TURN servers: accepts a JSON array (JS-style unquoted keys and single quotes
+# are tolerated, as copied from provider dashboards) or comma-separated URLs.
+def _load_ice_json(raw: str):
+    try:
+        return json.loads(raw)
+    except ValueError:
+        pass
+    fixed = raw.replace("'", '"')
+    fixed = re.sub(r'([{,]\s*)([A-Za-z_]\w*)\s*:', lambda m: f'{m.group(1)}"{m.group(2)}":', fixed)  # quote bare keys
+    fixed = re.sub(r',\s*([}\]])', lambda m: m.group(1), fixed)  # trailing commas
+    return json.loads(fixed)
+
+
 def _parse_ice_servers():
+    default = [{"urls": "stun:stun.l.google.com:19302"}]
     raw = os.getenv("ICE_SERVERS", "").strip()
     if not raw:
-        return [{"urls": "stun:stun.l.google.com:19302"}]
-    if raw.startswith("["):
+        return default
+    if raw.startswith("[") or raw.startswith("{"):
         try:
-            return json.loads(raw)
-        except Exception:
-            pass
+            data = _load_ice_json(raw)
+        except ValueError:
+            print("WARNING: ICE_SERVERS is not valid JSON; using the default STUN server.")
+            return default
+        return [data] if isinstance(data, dict) else data
     return [{"urls": s.strip()} for s in raw.split(",") if s.strip()]
 
 ICE_SERVERS = _parse_ice_servers()
