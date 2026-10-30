@@ -8,10 +8,11 @@ POST /api/simulate                start a Simulate-mode call (no mic, no Sarvam)
 
 import uuid
 
+from fastapi.concurrency import run_in_threadpool
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.orm import Session
 
-from app.config import ICE_SERVERS, has_api_key
+from app.config import get_ice_servers, has_api_key
 from app.db import get_db
 from app.models import Call, Form
 from app.schemas import SessionRequest, SimulateRequest
@@ -40,7 +41,7 @@ def get_webrtc_handler():
             raise _live_unavailable()
 
         ice_list = []
-        for server in ICE_SERVERS:
+        for server in get_ice_servers():
             if isinstance(server, dict):
                 urls = server.get("urls") or server.get("url")
                 username = server.get("username")
@@ -72,13 +73,14 @@ def _create_call(db: Session, form_id: str, settings: dict, mode: str) -> Call:
 async def create_session(body: SessionRequest, db: Session = Depends(get_db)):
     if not has_api_key():
         raise HTTPException(400, "SARVAM_API_KEY is not set in backend/.env. Use Simulate mode or add the key.")
+    ice_servers = await run_in_threadpool(get_ice_servers)  # also warms the cache for the offer
     call = _create_call(db, body.form_id, body.settings.model_dump(), "live")
     bus.publish(call.id, "status", {"status": "connecting"})
     bus.publish(call.id, "form_state", form_state(db, call.id))
     return {
         "call_id": call.id,
         "webrtc_offer_url": f"/api/webrtc/offer?call_id={call.id}",
-        "ice_servers": ICE_SERVERS,
+        "ice_servers": ice_servers,
         "events_url": f"/api/calls/{call.id}/events",
     }
 

@@ -17,6 +17,10 @@ services:
         sync: false
       - key: ICE_SERVERS
         sync: false
+      - key: METERED_DOMAIN
+        sync: false
+      - key: METERED_API_KEY
+        sync: false
       - key: APP_PASSWORD
         sync: false
       - key: ANTHROPIC_API_KEY

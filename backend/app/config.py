@@ -1,6 +1,10 @@
 import json
 import os
 import re
+import threading
+import time
+import urllib.parse
+import urllib.request
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -42,6 +46,35 @@ def _parse_ice_servers():
     return [{"urls": s.strip()} for s in raw.split(",") if s.strip()]
 
 ICE_SERVERS = _parse_ice_servers()
+
+# Optional: fetch fresh TURN credentials from Metered at call time (METERED_DOMAIN is the
+# "<app>.metered.live" host). Falls back to ICE_SERVERS if unset or the request fails.
+METERED_DOMAIN = os.getenv("METERED_DOMAIN", "").strip().removeprefix("https://").strip("/")
+METERED_API_KEY = os.getenv("METERED_API_KEY", "").strip()
+_ICE_CACHE_SECONDS = 3600
+_ice_cache: dict = {"at": 0.0, "servers": None}
+_ice_lock = threading.Lock()
+
+
+def get_ice_servers() -> list:
+    """ICE servers for new calls. Blocking (HTTP): call it from a worker thread."""
+    if not (METERED_DOMAIN and METERED_API_KEY):
+        return ICE_SERVERS
+    with _ice_lock:
+        if _ice_cache["servers"] and time.time() - _ice_cache["at"] < _ICE_CACHE_SECONDS:
+            return _ice_cache["servers"]
+        url = f"https://{METERED_DOMAIN}/api/v1/turn/credentials?" + urllib.parse.urlencode({"apiKey": METERED_API_KEY})
+        try:
+            with urllib.request.urlopen(url, timeout=5) as res:
+                servers = json.loads(res.read())
+            if not isinstance(servers, list) or not servers:
+                raise ValueError("unexpected response")
+        except Exception as e:  # never log the URL: it contains the API key
+            print(f"WARNING: could not fetch Metered ICE servers ({type(e).__name__}); using ICE_SERVERS.")
+            return _ice_cache["servers"] or ICE_SERVERS
+        _ice_cache.update(at=time.time(), servers=servers)
+        return servers
+
 
 SEED_FORMS_DIR = BACKEND_DIR / "app" / "seed_forms"
 SIMULATE_DIR = BACKEND_DIR / "app" / "simulate"
