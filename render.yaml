@@ -1,14 +1,18 @@
-# Render Blueprint: one web service (backend + built frontend), live voice calls included.
+# Render Blueprint: native Python web service (no Docker).
+# Builds the Vite frontend first, installs Python packages, and runs FastAPI.
 services:
   - type: web
     name: sarvam-voice-agent
-    runtime: docker
-    plan: starter            # live calls need an always-on instance (free tier sleeps)
+    runtime: python
+    buildCommand: npm --prefix frontend install && npm --prefix frontend run build && pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.4
       - key: SARVAM_API_KEY
-        sync: false          # set in the Render dashboard, never in Git
+        sync: false
       - key: DATABASE_URL
-        sync: false          # mysql+pymysql://user:pass@host:3306/db?charset=utf8mb4 (optional; SQLite is wiped on redeploy)
+        sync: false
       - key: ICE_SERVERS
-        sync: false          # optional: add a TURN server for testers on other networks
+        sync: false
