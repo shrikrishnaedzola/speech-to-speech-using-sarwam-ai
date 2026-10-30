@@ -17,6 +17,5 @@ uharfbuzz>=0.40.0
 matplotlib>=3.8.0
 numpy>=1.26.0
 
-# Tests
-pytest==9.1.1
-httpx==0.28.1
+# Optional AI summary in post-call reports (needs ANTHROPIC_API_KEY)
+anthropic>=0.40.0
