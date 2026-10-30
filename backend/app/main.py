@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from loguru import logger
 from sqlalchemy import text
 
+from app.auth import BasicAuthMiddleware, app_password
 from app.config import CORS_ORIGINS, has_api_key
 from app.db import SessionLocal, ensure_db_initialized, init_db
 from report_module.router import make_report_router
@@ -37,6 +38,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Zolabs Voice Form Tester - Sarvam Pipeline", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=CORS_ORIGINS, allow_methods=["*"], allow_headers=["*"])
+if app_password():
+    app.add_middleware(BasicAuthMiddleware, password=app_password())
 
 for module in (forms, session, tools, calls):
     app.include_router(module.router)

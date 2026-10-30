@@ -24,7 +24,7 @@ You need **Python 3.11 or 3.12** and **Node 18 or newer**.
 cd backend
 python -m venv .venv
 .venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 copy .env.example .env            # macOS/Linux: cp .env.example .env
 # open backend/.env and set SARVAM_API_KEY=<your key>
 
@@ -252,46 +252,27 @@ frontend/src/
 ### Render (recommended: live voice calls work)
 
 One Render web service runs the FastAPI backend (with pipecat) and serves the built frontend from the same
-origin, so `/api` and the events WebSocket need no extra setup. It is defined by `Dockerfile` and `render.yaml`.
+origin, so `/api` and the events WebSocket need no extra setup. It is defined by `render.yaml`.
 
 1. In Render: **New > Blueprint**, pick this repo and branch. Render reads `render.yaml`.
 2. Set the environment variables in the Render dashboard (never in Git):
    - `SARVAM_API_KEY` (required)
    - `DATABASE_URL` (optional MySQL URL; without it SQLite is used and is wiped on every redeploy)
-   - `ICE_SERVERS` (optional TURN server for testers on other networks)
+   - `ICE_SERVERS` (TURN server for testers on other networks; JSON array or comma-separated URLs)
+   - `APP_PASSWORD` (recommended: Basic auth for the whole app; `/api/health` stays open)
+   - `ANTHROPIC_API_KEY` (optional, AI summary in reports)
 3. Deploy. Health check: `/api/health`.
 
 Live calls need an always-on instance, so use a paid plan (the free tier sleeps).
 
-### Vercel (Simulate mode, forms and reports only)
+### Vercel (optional, frontend only)
 
-Vercel serverless cannot hold a WebRTC/WebSocket voice call, and the function size limit forces pipecat out of
-the root `requirements.txt`. Live-call endpoints return 503 there; Simulate mode and reports work.
+Vercel cannot run the backend (no long-lived WebRTC/WebSocket). Host only the frontend there:
 
-#### Vercel details
-
-### Files configured for Root Deployment:
-1. `vercel.json` – Configures static frontend build output (`frontend/dist`), serverless Python API function (`api/index.py`), and `/api/(.*)` rewrites.
-2. `package.json` (root) – Defines `"build": "npm --prefix frontend install && npm --prefix frontend run build"`.
-3. `requirements.txt` (root) – Python dependencies for Vercel's serverless runtime (including `pymysql` and `cryptography`).
-4. `api/index.py` – Vercel serverless entry point routing `/api` requests to the FastAPI backend.
-
-### Setting up MySQL:
-1. Obtain your MySQL connection URL from any cloud MySQL provider (Aiven, PlanetScale, AWS RDS, DigitalOcean, Clever Cloud, etc.):
-   ```text
-   DATABASE_URL=mysql+pymysql://<user>:<password>@<host>:<port>/<dbname>?charset=utf8mb4
-   ```
-2. Configure Environment Variables in Vercel:
-   - Go to your Project in **Vercel Dashboard > Settings > Environment Variables**.
-   - Add `DATABASE_URL` (or `MYSQL_URL`) with your MySQL connection string.
-   - Add `SARVAM_API_KEY` with your Sarvam API key.
-   - Add `CORS_ORIGINS` (e.g. `https://your-project.vercel.app,http://localhost:5180`).
-3. Deploy to Vercel:
-   - Via GitHub: push your repo to GitHub and import the repository into Vercel. Keep **Root Directory** as `./` (default).
-   - Via Vercel CLI:
-     ```bash
-     vercel
-     ```
+1. Import the repo, set **Root Directory** to `frontend` (uses `frontend/vercel.json`).
+2. Set `VITE_BACKEND_URL` to your Render URL.
+3. On Render, set `CORS_ORIGINS` to the Vercel URL. `APP_PASSWORD` Basic auth is same-origin only, so
+   do not combine it with a split deploy.
 
 ## Sarvam docs used
 - [Realtime STT streaming](https://docs.sarvam.ai/api/api-guides-tutorials/speech-to-text/realtime-streaming)

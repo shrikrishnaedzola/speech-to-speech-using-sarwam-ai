@@ -4,6 +4,7 @@ services:
   - type: web
     name: sarvam-voice-agent
     runtime: python
+    plan: starter  # live calls need an always-on instance; the free tier sleeps
     buildCommand: npm --prefix frontend install && npm --prefix frontend run build && pip install -r backend/requirements.txt
     startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
@@ -15,4 +16,8 @@ services:
       - key: DATABASE_URL
         sync: false
       - key: ICE_SERVERS
+        sync: false
+      - key: APP_PASSWORD
+        sync: false
+      - key: ANTHROPIC_API_KEY
         sync: false

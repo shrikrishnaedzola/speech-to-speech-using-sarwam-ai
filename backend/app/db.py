@@ -48,12 +48,10 @@ def ensure_db_initialized():
     global _initialized
     if not _initialized:
         init_db()
-        try:
-            from app.services.forms_loader import load_seed_forms
-            with SessionLocal() as db:
-                load_seed_forms(db)
-        except Exception:
-            pass
+        from app.services.forms_loader import load_seed_forms
+
+        with SessionLocal() as db:
+            load_seed_forms(db)
         _initialized = True
 
 
