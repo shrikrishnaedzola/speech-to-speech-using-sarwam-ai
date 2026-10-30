@@ -1,8 +1,16 @@
 // API calls for the report page. Same endpoints in every tester app
 // (they come from the shared report_module router).
 
+const BACKEND_BASE = (import.meta.env.VITE_BACKEND_URL || "").replace(/\/+$/, "");
+
+function toUrl(path) {
+  if (!BACKEND_BASE) return path;
+  return `${BACKEND_BASE}${path.startsWith("/") ? "" : "/"}${path}`;
+}
+
 async function call(path, options = {}) {
-  const res = await fetch(path, { headers: { "Content-Type": "application/json" }, ...options });
+  const url = toUrl(path);
+  const res = await fetch(url, { headers: { "Content-Type": "application/json" }, ...options });
   if (!res.ok) {
     let detail = res.statusText;
     try {
@@ -24,5 +32,5 @@ export const reportApi = {
   saveRatings: (id, ratings) => call(`/api/calls/${id}/ratings`, { method: "POST", body: JSON.stringify(ratings) }),
   settings: () => call("/api/report/settings"),
   saveSettings: (s) => call("/api/report/settings", { method: "PUT", body: JSON.stringify(s) }),
-  exportUrl: (id, format) => `/api/calls/${id}/report/export?format=${format}`,
+  exportUrl: (id, format) => toUrl(`/api/calls/${id}/report/export?format=${format}`),
 };

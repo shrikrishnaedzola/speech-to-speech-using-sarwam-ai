@@ -1,8 +1,17 @@
-// Small wrappers around the backend API. All calls go to our own backend (/api),
-// never to Sarvam directly.
+// Small wrappers around the backend API.
+// In split deployment: defaults to VITE_BACKEND_URL (e.g. https://your-backend.onrender.com).
+// If not set, falls back to the current window origin.
+
+const BACKEND_BASE = (import.meta.env.VITE_BACKEND_URL || "").replace(/\/+$/, "");
+
+function toUrl(path) {
+  if (!BACKEND_BASE) return path;
+  return `${BACKEND_BASE}${path.startsWith("/") ? "" : "/"}${path}`;
+}
 
 async function request(path, options = {}) {
-  const res = await fetch(path, {
+  const url = toUrl(path);
+  const res = await fetch(url, {
     headers: { "Content-Type": "application/json" },
     ...options,
   });
@@ -31,10 +40,14 @@ export const api = {
   review: (callId, reviews) =>
     request(`/api/calls/${callId}/review`, { method: "POST", body: JSON.stringify({ reviews }) }),
   exportUrl: (callId, format, section = "fields") =>
-    `/api/calls/${callId}/export?format=${format}&section=${section}`,
+    toUrl(`/api/calls/${callId}/export?format=${format}&section=${section}`),
 };
 
 export function eventsSocketUrl(callId) {
+  if (BACKEND_BASE) {
+    const wsBase = BACKEND_BASE.replace(/^http:/, "ws:").replace(/^https:/, "wss:");
+    return `${wsBase}/api/calls/${callId}/events`;
+  }
   const proto = window.location.protocol === "https:" ? "wss" : "ws";
   return `${proto}://${window.location.host}/api/calls/${callId}/events`;
 }
