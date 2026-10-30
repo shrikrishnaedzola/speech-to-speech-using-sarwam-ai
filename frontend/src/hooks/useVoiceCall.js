@@ -20,6 +20,29 @@ function waitForIceGathering(pc, timeoutMs = 3000) {
   });
 }
 
+// Resolves when the media connection is up; rejects if ICE fails or nothing connects in time.
+function waitForConnected(pc, timeoutMs = 20000) {
+  return new Promise((resolve, reject) => {
+    const finish = (err) => {
+      clearTimeout(timer);
+      pc.removeEventListener("connectionstatechange", check);
+      err ? reject(err) : resolve();
+    };
+    const check = () => {
+      console.info("[call] connectionState:", pc.connectionState, "ice:", pc.iceConnectionState);
+      if (pc.connectionState === "connected") finish();
+      else if (pc.connectionState === "failed") finish(new Error(NO_MEDIA_PATH));
+    };
+    const timer = setTimeout(() => finish(new Error(NO_MEDIA_PATH)), timeoutMs);
+    pc.addEventListener("connectionstatechange", check);
+    check();
+  });
+}
+
+const NO_MEDIA_PATH =
+  "Could not open the audio connection to the server. This is usually a network/firewall issue: " +
+  "check that ICE_SERVERS on the backend includes a working TURN server.";
+
 export function useVoiceCall() {
   const pcRef = useRef(null);
   const streamRef = useRef(null);
@@ -51,6 +74,9 @@ export function useVoiceCall() {
     };
     pc.onconnectionstatechange = () => setConnected(pc.connectionState === "connected");
 
+    pc.onicecandidate = (e) => {
+      if (e.candidate) console.info("[call] local ICE candidate:", e.candidate.type, e.candidate.protocol);
+    };
     await pc.setLocalDescription(await pc.createOffer());
     await waitForIceGathering(pc);
     const answer = await api.sendOffer(session.webrtc_offer_url, {
@@ -58,6 +84,7 @@ export function useVoiceCall() {
       type: pc.localDescription.type,
     });
     await pc.setRemoteDescription({ sdp: answer.sdp, type: answer.type });
+    await waitForConnected(pc);
   }
 
   function disconnect() {
