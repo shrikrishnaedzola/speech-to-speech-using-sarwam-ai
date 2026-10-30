@@ -1,0 +1,2 @@
+# Render/other hosts install from the repo root; the real list lives in backend/requirements.txt
+-r backend/requirements.txt
