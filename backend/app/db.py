@@ -1,9 +1,11 @@
 """Database setup (SQLAlchemy) supporting MySQL and SQLite."""
 
 import os
+import ssl
 from pathlib import Path
 
 from sqlalchemy import create_engine
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from app.config import DATABASE_URL
@@ -13,6 +15,32 @@ effective_url = DATABASE_URL
 if effective_url.startswith("mysql://"):
     effective_url = effective_url.replace("mysql://", "mysql+pymysql://", 1)
 
+def _split_ssl_mode(url: str):
+    """pymysql rejects the MySQL-client `ssl-mode` URL option (Aiven's URLs use it).
+
+    Strip it and return an equivalent SSL context: REQUIRED/PREFERRED encrypt without verifying the
+    server certificate (the mysql client's meaning); VERIFY_CA / VERIFY_IDENTITY verify it.
+    """
+    parsed = make_url(url)
+    query = dict(parsed.query)
+    mode = None
+    for key in ("ssl-mode", "ssl_mode"):
+        mode = query.pop(key, mode)
+    if mode is None:
+        return url, None
+    mode = str(mode).upper()
+    if mode == "DISABLED":
+        return parsed.set(query=query).render_as_string(hide_password=False), None
+    context = ssl.create_default_context(cafile=query.get("ssl_ca"))
+    if mode in ("REQUIRED", "PREFERRED"):
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+    elif mode == "VERIFY_CA":
+        context.check_hostname = False
+    query.pop("ssl_ca", None)
+    return parsed.set(query=query).render_as_string(hide_password=False), context
+
+
 engine_kwargs = {}
 if effective_url.startswith("sqlite:///"):
     db_path = effective_url.removeprefix("sqlite:///")
@@ -21,6 +49,9 @@ if effective_url.startswith("sqlite:///"):
     engine_kwargs["connect_args"] = {"check_same_thread": False}
 else:
     # MySQL / Cloud DB configuration
+    effective_url, ssl_context = _split_ssl_mode(effective_url)
+    if ssl_context is not None:
+        engine_kwargs["connect_args"] = {"ssl": ssl_context}
     # pool_pre_ping prevents 'MySQL server has gone away' in serverless / connection drops
     engine_kwargs["pool_pre_ping"] = True
     engine_kwargs["pool_recycle"] = int(os.getenv("DB_POOL_RECYCLE", "280"))
