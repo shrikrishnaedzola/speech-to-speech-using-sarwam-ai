@@ -38,7 +38,18 @@ def get_webrtc_handler():
             from pipecat.transports.smallwebrtc.request_handler import SmallWebRTCRequestHandler
         except ImportError:
             raise _live_unavailable()
-        _webrtc_handler = SmallWebRTCRequestHandler(ice_servers=[IceServer(urls=ICE_SERVERS)])
+
+        ice_list = []
+        for server in ICE_SERVERS:
+            if isinstance(server, dict):
+                urls = server.get("urls") or server.get("url")
+                username = server.get("username")
+                credential = server.get("credential")
+                ice_list.append(IceServer(urls=urls, username=username, credential=credential))
+            else:
+                ice_list.append(IceServer(urls=str(server)))
+
+        _webrtc_handler = SmallWebRTCRequestHandler(ice_servers=ice_list)
     return _webrtc_handler
 
 

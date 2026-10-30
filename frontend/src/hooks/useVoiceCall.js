@@ -33,7 +33,11 @@ export function useVoiceCall() {
     });
     streamRef.current = stream;
 
-    const pc = new RTCPeerConnection({ iceServers: session.ice_servers.map((url) => ({ urls: url })) });
+    const iceServers = (session.ice_servers || []).map((item) => {
+      if (typeof item === "string") return { urls: item };
+      return item;
+    });
+    const pc = new RTCPeerConnection({ iceServers });
     pcRef.current = pc;
 
     // Audio must be the first transceiver (the server expects it at index 0).

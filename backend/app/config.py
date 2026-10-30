@@ -1,15 +1,4 @@
-"""App settings and the option lists shown in the UI dropdowns.
-
-The Sarvam API key is read ONLY from the SARVAM_API_KEY environment variable
-(loaded from backend/.env). It is never sent to the browser and never logged.
-
-Model IDs, voices and prices below come from docs.sarvam.ai (checked Oct 2026):
-- Models:  https://docs.sarvam.ai/api/getting-started/models
-- Bulbul:  https://docs.sarvam.ai/api/getting-started/models/bulbul
-- Voices:  https://docs.sarvam.ai/api/api-guides-tutorials/text-to-speech/voices
-- Pricing: https://docs.sarvam.ai/api/getting-started/pricing
-"""
-
+import json
 import os
 from pathlib import Path
 
@@ -23,8 +12,20 @@ SARVAM_API_KEY = os.getenv("SARVAM_API_KEY", "")
 _DEFAULT_DB_DIR = Path("/tmp") if os.getenv("VERCEL") else BACKEND_DIR / "data"
 DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("MYSQL_URL") or f"sqlite:///{(_DEFAULT_DB_DIR / 'tester.db').as_posix()}"
 CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5180,http://127.0.0.1:5180,http://localhost:8000,http://127.0.0.1:8000").split(",")]
-# Public STUN server; enough for local testing. Add a TURN server for remote testers.
-ICE_SERVERS = [s.strip() for s in os.getenv("ICE_SERVERS", "stun:stun.l.google.com:19302").split(",") if s.strip()]
+
+# Parse ICE / STUN / TURN servers: accepts JSON array or comma-separated strings
+def _parse_ice_servers():
+    raw = os.getenv("ICE_SERVERS", "").strip()
+    if not raw:
+        return [{"urls": "stun:stun.l.google.com:19302"}]
+    if raw.startswith("["):
+        try:
+            return json.loads(raw)
+        except Exception:
+            pass
+    return [{"urls": s.strip()} for s in raw.split(",") if s.strip()]
+
+ICE_SERVERS = _parse_ice_servers()
 
 SEED_FORMS_DIR = BACKEND_DIR / "app" / "seed_forms"
 SIMULATE_DIR = BACKEND_DIR / "app" / "simulate"
